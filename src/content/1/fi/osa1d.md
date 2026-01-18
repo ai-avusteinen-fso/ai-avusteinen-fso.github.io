@@ -324,7 +324,7 @@ Vaikka tilalle _left_ asetettiin uusi arvo kutsumalla _setLeft(left + 1)_ on til
 setTotal(left + right) 
 ```
 
-Syynä ilmiöön on se, että tilan päivitys tapahtuu Reactissa [asynkronisesti](https://react.dev/learn/queueing-a-series-of-state-updates#react-batches-state-updates), eli "jossain vaiheessa" ennen kuin komponentti renderöidään uudelleen, ei kuitenkaan välittömästi.
+Syynä ilmiöön on se, että tilan päivitys tapahtuu Reactissa [asynkronisesti](https://react.dev/learn/queueing-a-series-of-state-updates#react-batches-state-updates), eli ei välittömästi vaan "jossain vaiheessa" sen jälkeen, kun tapahtumakäsittelijä on suoritettu mutta ennen kuin komponentti renderöidään uudelleen.
 
 Saamme korjattua sovelluksen seuraavasti:
 
@@ -1338,7 +1338,7 @@ Renderöi vielä positive-muuttuja App-komponentissa.
 
 Refaktoroi sovelluksesi siten, että tilastojen näyttäminen on eriytetty oman komponentin <i>Statistics</i> vastuulle. Sovelluksen tila säilyy edelleen juurikomponentissa <i>App</i>.
 
-Muista, että komponentteja **ei saa** määritellä toisen komponentin sisällä:
+Muista, että komponentteja ei saa määritellä toisen komponentin sisällä:
 
 ```js
 // oikea paikka komponentin määrittelyyn
@@ -1477,9 +1477,9 @@ const Statistics = (props) => {
   /// ...
   return(
     <div>
-      <StatisticLine text="good" value ={...} />
-      <StatisticLine text="neutral" value ={...} />
-      <StatisticLine text="bad" value ={...} />
+      <StatisticLine text="good" value={...} />
+      <StatisticLine text="neutral" value={...} />
+      <StatisticLine text="bad" value={...} />
       // ...
     </div>
   )
@@ -1534,6 +1534,8 @@ Maalaa Statistics-komponentti ja kirjoita Copilotille:
 Käytä uutta StatisticsLine-komponenttia.
 ```
 
+Sovelluksen tila säilytetään edelleen juurikomponentissa <i>App</i>.
+
 <h4>1.11*: unicafe step6</h4>
 
 Toteuta tilastojen näyttäminen HTML:n [taulukkona](https://developer.mozilla.org/en-US/docs/Learn/HTML/Tables/Basics) siten, että saat sovelluksesi näyttämään suunnilleen seuraavanlaiselta:
@@ -1544,7 +1546,7 @@ Muista pitää konsoli koko ajan auki. Jos saat konsoliin seuraavan warningin:
 
 ![](../../images/1/17a.png)
 
-tee tarvittavat toimenpiteet, jotta saat warningin katoamaan. Googlaa tarvittaessa virheilmoituksella. Tämä yleensä johtuu virheellisestä rakennehierarkiasta, huolehdi, että rivit ovat &lt;tbody&gt;:n sisällä
+tee tarvittavat toimenpiteet, jotta saat warningin katoamaan. Googlaa tarvittaessa virheilmoituksella.
 
 <h4>Copilot-ohjeet tehtävälle</h4>
 
@@ -1586,6 +1588,8 @@ Nyt StatisticLine-komponentit ovat tbody-elementin sisällä:
 </table>
 ```
 
+**Huolehdi nyt ja jatkossa, että konsolissa ei näy mitään warningeja!**
+
 <h4>1.12*: anekdootit step1</h4>
 
 Ohjelmistotuotannossa tunnetaan lukematon määrä [anekdootteja](http://www.comp.nus.edu.sg/~damithch/pages/SE-quotes.htm) eli pieniä "onelinereita", jotka kiteyttävät alan ikuisia totuuksia.
@@ -1619,7 +1623,7 @@ const App = () => {
 export default App
 ```
 
-Tiedoston main.jsx sisältö on sama kuin edellisissä tehtävissä.
+Tiedoston <i>main.jsx</i> sisältö on sama kuin edellisissä tehtävissä.
 
 Google kertoo, miten voit generoida JavaScriptilla sopivia satunnaisia lukuja. Muista, että voit testata esim. satunnaislukujen generointia konsolissa.
 

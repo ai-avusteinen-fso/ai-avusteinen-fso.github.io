@@ -353,9 +353,9 @@ Korjaa App-komponentti käyttämään Content- ja Total-komponentteja niin, ett�
 
 Nyt App-komponentissa part-oliot syötetään oikein Content-komponentille ja part-olioiden exercises-kentät syötetään Total-komponentille.
 
-<h4>1.4: kurssitiedot step4</h4>
+  <h4>1.4: kurssitiedot step4</h4>
 
-Seuraavaksi laitetaan oliot taulukkoon, eli muuta <i>Appin</i> muuttujamäärittelyt seuraavaan muotoon ja muuta sovelluksen kaikki osat vastaavasti:
+Seuraavaksi laitetaan oliot taulukkoon, eli muuta  <i>App</i> :in muuttujamäärittelyt seuraavaan muotoon ja muuta sovelluksen kaikki osat vastaavasti:
 
 ```js
 const App = () => {
