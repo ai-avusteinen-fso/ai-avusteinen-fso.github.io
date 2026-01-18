@@ -324,7 +324,7 @@ Vaikka tilalle _left_ asetettiin uusi arvo kutsumalla _setLeft(left + 1)_ on til
 setTotal(left + right) 
 ```
 
-Syynä ilmiöön on se, että tilan päivitys tapahtuu Reactissa [asynkronisesti](https://react.dev/learn/queueing-a-series-of-state-updates#react-batches-state-updates), eli ei välittömästi vaan "jossain vaiheessa" sen jälkeen, kun tapahtumakäsittelijä on suoritettu mutta ennen kuin komponentti renderöidään uudelleen.
+Syynä ilmiöön on se, että tilan päivitys tapahtuu Reactissa [asynkronisesti](https://react.dev/learn/queueing-a-series-of-state-updates#react-batches-state-updates), eli "jossain vaiheessa" ennen kuin komponentti renderöidään uudelleen, ei kuitenkaan välittömästi.
 
 Saamme korjattua sovelluksen seuraavasti:
 
@@ -1231,17 +1231,114 @@ const App = () => {
 export default App
 ```
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+On suositeltavaa, että teet uudelle projektille aina uuden Vite-projektin.
+
+```bash
+npm create vite@latest
+```
+
+Muistuksena: Pidä selain auki ja tarkastele sitä jokaisen vaiheen jälkeen.
+
+Luodaan ensin otsikko ja kaksi nappia.
+
+Maalaa div-osio:
+
+```js
+<div>
+  code here
+</div>
+```
+
+ja kirjoita Copilotille:
+
+```text
+Aseta otsikko "Give Feedback"
+Tee kaksi nappia good ja neutral.
+Napit eivät vielä tee mitään ne vain renderöityvät App-komponentissa.
+```
+
+Lisää itse kolmas nappi "bad" samaan tyyliin.
+
+<p>&nbsp;</p>
+<details>
+
+<summary>Avaa vinkki</summary>
+
+```js
+<button>bad</button>
+```
+</details>
+<p>&nbsp;</p>
+
+
+Seuraavaksi lisätään nappeihin toiminnallisuutta, maalaa button-elementit ja kirjoita Copilotille:
+
+```text
+Luo erilliset handlerit, jotka lisäävät napin klikkauksia vastaavaa statea aina, kun nappia painetaan.
+```
+
+Nyt napeilla on eventHandlerit, jotka on liitetty nappeihin.
+
+Lopuksi haluamme vielä renderöidä kuinka monta kertaa nappeja on painettu.
+
+Maalaa:
+
+```js
+<div>
+  <h1>Give Feedback</h1>
+  <button onClick={handleGoodClick}>good</button>
+  <button onClick={handleNeutralClick}>neutral</button>
+  <button onClick={handleBadClick}>bad</button>
+</div>
+```
+
+ja kirjoita Copilotille:
+
+```text
+Aseta <h2>Statistics</h2> otsikko nappien alapuolelle.
+Sen jälkeen renderöi jokaisen napin klikkausten määrä.
+```
+
+
 <h4>1.7: unicafe step2</h4>
 
 Laajenna sovellusta siten, että se näyttää palautteista enemmän statistiikkaa: yhteenlasketun määrän, keskiarvon (hyvän arvo 1, neutraalin 0, huonon -1) ja sen kuinka monta prosenttia palautteista on ollut positiivisia:
 
 ![](../../images/1/14e.png)
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Luodaan ensin App-komponenttiin halutut muuttujat:
+
+```text
+Luo App-komponenttiin muuttuja all, joka laskee kaikkien äänien summan.
+```
+
+```text
+Luo App-komponenttiin muuttuja average, joka laskee keskiarvon kaikkien äänien kesken.
+```
+
+```text
+Luo App-komponenttiin muuttuja positive, joka laskee, kuinka monta prosenttia palautteista on ollut hyviä.
+```
+
+Seuraavaksi haluamme renderöitä uudet statistiikat:
+
+```text
+Renderöi App-komponentissa all ja average -muuttujat.
+```
+
+Nyt selaimessa näkyy all ja average -muuttujat, mutta positive-muuttujaa ei vielä näy.
+
+Renderöi vielä positive-muuttuja App-komponentissa.
+
 <h4>1.8: unicafe step3</h4>
 
 Refaktoroi sovelluksesi siten, että tilastojen näyttäminen on eriytetty oman komponentin <i>Statistics</i> vastuulle. Sovelluksen tila säilyy edelleen juurikomponentissa <i>App</i>.
 
-Muista, että komponentteja ei saa määritellä toisen komponentin sisällä:
+Muista, että komponentteja **ei saa** määritellä toisen komponentin sisällä:
 
 ```js
 // oikea paikka komponentin määrittelyyn
@@ -1266,11 +1363,105 @@ const App = () => {
 }
 ```
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Luodaan ensin Statistics-komponentti. Kirjoita Copilotille:
+
+```text
+Luo komponentti Statistics tiedoston alkuun. Se ottaa propsit { good, neutral, bad }, laskee all, average, positive arvot ja renderöi edellä mainitut. Poista turhat muuttujat App-komponentista. Älä renderöi komponenttia vielä Appissa.
+```
+
+Nyt Copilot loi Statistics-komponentin oletettavasti näin:
+
+```js
+const Statistics = ({ good, neutral, bad }) => {
+  const all = good + neutral + bad
+  const average = all === 0 ? 0 : (good - bad) / all
+  const positive = all === 0 ? 0 : (good / all) * 100
+
+   return (
+    <div>
+      <h2>Statistics</h2>
+      <p>good: {good}</p>
+      <p>neutral: {neutral}</p>
+      <p>bad: {bad}</p>
+      <p>All: {all}</p>
+      <p>Average: {average}</p>
+      <p>Positive: {positive} %</p>
+    </div>
+  )
+}
+```
+
+Nyt vielä haluaisimme renderöidä uuden Statistics-komponentin App-komponentissa.
+
+Lisää tämä toiminto itse.
+
+<p>&nbsp;</p>
+<details>
+
+<summary>Avaa vinkki</summary>
+
+```js
+return (
+  <div>
+    <h1>Give Feedback</h1>
+    <Button onClick={handleGoodClick}>good</Button>
+    <Button onClick={handleNeutralClick}>neutral</Button>
+    <Button onClick={handleBadClick}>bad</Button>
+    <Statistics .. .. .. />
+  </div>
+  )
+```
+Mitä tietoa haluamme Statistics-komponentille?
+
+</details>
+<p>&nbsp;</p>
+
 <h4>1.9: unicafe step4</h4>
 
 Muuta sovellusta siten, että numeeriset tilastot näytetään ainoastaan, jos palautteita on jo annettu:
 
 ![](../../images/1/15e.png)
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Maalaa juuri luotu Statistics-komponentti ja kirjoita Copilotille:
+
+```text
+Jos all === 0, palauta:
+<>
+  <h2>statistics</h2>
+  <p>No feedback given</p>
+</>
+
+muuten renderöi nykyinen statistics-UI
+```
+
+Tuloksen pitäisi näyttää tältä:
+
+```js
+if (all === 0) {
+    return (
+      <>
+        <h2>Statistics</h2>
+        <p>No feedback given</p>
+      </>
+    )
+  }
+  return (
+    <div>
+      <h2>Statistics</h2>
+      <p>good: {good}</p>
+      <p>neutral: {neutral}</p>
+      <p>bad: {bad}</p>
+      <p>All: {all}</p>
+      <p>Average: {average}</p>
+      <p>Positive: {positive} %</p>
+    </div>
+  )
+}
+```
 
 <h4>1.10: unicafe step5</h4>
 
@@ -1286,16 +1477,62 @@ const Statistics = (props) => {
   /// ...
   return(
     <div>
-      <StatisticLine text="good" value={...} />
-      <StatisticLine text="neutral" value={...} />
-      <StatisticLine text="bad" value={...} />
+      <StatisticLine text="good" value ={...} />
+      <StatisticLine text="neutral" value ={...} />
+      <StatisticLine text="bad" value ={...} />
       // ...
     </div>
   )
 }
 ```
 
-Sovelluksen tila säilytetään edelleen juurikomponentissa <i>App</i>.
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Luodaan ensimmäisenä Button-komponentti. Kirjoita Copilotille:
+
+```text
+Luo Button-komponentti tiedoston yläreunaan, joka saa propsit { onClick, children } ja renderöi <button onClick={onClick}>{children}</button>.
+```
+
+Copilot loi Button-komponentin, joka näyttänee tältä:
+
+```js
+const Button = ({ onClick, children }) => (
+  <button onClick={onClick}>{children}</button>
+)
+```
+
+Korvataan seuraavaksi button-elementit Button-komponenteilla.
+
+Maalaa App-komponentissa button-elementit ja kirjoita Copilotille:
+
+```text
+Korvaa Button-komponenteilla.
+```
+
+Nyt button-elementit on korvattu komponenteilla ja toimii edelleen kuten ennen.
+
+Seuraavaksi luodaan StatisticLine-komponentti:
+
+```text
+Luo StatisticLine-komponentti, joka saa propsit { text, value } ja renderöi ne p-elementissä.
+```
+
+Uusi komponentti näyttää suurin piirtein tältä:
+
+```js
+const StatisticLine = ({ text, value }) => (
+  <p>{text} {value}</p>
+)
+```
+
+Seuraavaksi otetaan uusi komponentti käyttöön Statistics-komponentissa.
+
+Maalaa Statistics-komponentti ja kirjoita Copilotille:
+
+```text
+Käytä uutta StatisticsLine-komponenttia.
+```
 
 <h4>1.11*: unicafe step6</h4>
 
@@ -1307,9 +1544,47 @@ Muista pitää konsoli koko ajan auki. Jos saat konsoliin seuraavan warningin:
 
 ![](../../images/1/17a.png)
 
-tee tarvittavat toimenpiteet, jotta saat warningin katoamaan. Googlaa tarvittaessa virheilmoituksella.
+tee tarvittavat toimenpiteet, jotta saat warningin katoamaan. Googlaa tarvittaessa virheilmoituksella. Tämä yleensä johtuu virheellisestä rakennehierarkiasta, huolehdi, että rivit ovat &lt;tbody&gt;:n sisällä
 
-**Huolehdi nyt ja jatkossa, että konsolissa ei näy mitään warningeja!**
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Maalaa StatisticLine-komponentti ja kirjoita Copilotille:
+
+```text
+Muuta StatisticLine palauttamaan taulukon rivi: <tr><td>{text}</td><td>{value}</td></tr>. Älä muuta propsien nimiä.
+```
+
+Muutoksen jälkeen StatisticLine-komponentin pitäisi näyttää tältä:
+
+```js
+const StatisticLine = ({ text, value }) => (
+  <tr>
+    <td>{text}</td>
+    <td>{value}</td>
+  </tr>
+)
+```
+
+Seuraavaksi maalaa Statistic-komponentti ja kirjoita Copilotille:
+
+```text
+Laita Statistics-komponentissa StatisticLine-komponentit tbody-elementin sisään.
+```
+
+Nyt StatisticLine-komponentit ovat tbody-elementin sisällä:
+
+```js
+<table>
+  <tbody>
+    <StatisticLine text="good" value={good} />
+    <StatisticLine text="neutral" value={neutral} />
+    <StatisticLine text="bad" value={bad} />
+    <StatisticLine text="All" value={all} />
+    <StatisticLine text="Average" value={average} />
+    <StatisticLine text="Positive" value={positive + ' %'} />
+  </tbody>
+</table>
+```
 
 <h4>1.12*: anekdootit step1</h4>
 
@@ -1344,13 +1619,31 @@ const App = () => {
 export default App
 ```
 
-Tiedoston <i>main.jsx</i> sisältö on sama kuin edellisissä tehtävissä.
+Tiedoston main.jsx sisältö on sama kuin edellisissä tehtävissä.
 
 Google kertoo, miten voit generoida JavaScriptilla sopivia satunnaisia lukuja. Muista, että voit testata esim. satunnaislukujen generointia konsolissa.
 
 Sovellus voi näyttää esim. seuraavalta:
 
 ![](../../images/1/18a.png)
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Huomaa taas ensimmäisenä uusi projekti.
+
+Tehdään ensin nappi ja sille erillinen tapahtumankuuntelija.
+
+Maalaa return-lohko ja kirjoita Copilotille:
+
+```text
+Lisää nappi "next anecdote" anekdootin alapuolelle ja luo sille erillinen tapahtumankuuntelija, joka console.loggaa "Next anecdote clicked".
+```
+
+Seuraavaksi haluamme, että tapahtumakuuntelija valitsee satunnaisesti uuden anekdootin:
+
+```text
+Muokkaa tapahtumankuuntelijaa siten, että se arpoo satunnaisen anekdootin taulukosta ja päivittää selected-tilan. Poista aikaisempi console.log kuuntelijasta.
+```
 
 <h4>1.13*: anekdootit step2</h4>
 
@@ -1382,6 +1675,39 @@ copy[2] += 1
 
 Yksinkertaisempi ratkaisu lienee nyt taulukon käyttö. Googlaamalla löydät paljon vihjeitä sille, miten kannattaa luoda halutun mittainen taulukko, joka on täytetty nollilla, esim. [tämän](https://stackoverflow.com/questions/20222501/how-to-create-a-zero-filled-javascript-array-of-arbitrary-length/22209781).
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Luodaan ensimmäisenä votes-tila. Kirjoita Copilotille:
+
+```text
+Lisää App-komponenttiin votes-tila, jonka pituus on anecdotes.length. Taulukko täyttyy nollilla ja aseta se useStateen.
+```
+
+Taulukko alustetaan nollilla siten, että jokaista tehtävän anekdoottia kohden on yksi nolla. Näin jokaiselle anekdootille saadaan oma lukuarvo, joka vastaa sille annettujen äänien määrää.
+
+Seuraavaksi haluamme napin ja sille tapahtumankuuntelijan:
+
+```text
+Lisää uusi nappi "vote" ja sille erillinen tapahtumankuuntelija, joka console.loggaa valitun anekdootin.
+```
+
+Vote-napin tapahtumankuuntelija tulostaa valitun anekdootin konsoliin.
+
+Seuraavaksi haluamme kasvattaa valitun anekdootin äänimäärää votes-taulukossa.
+
+Maalaa uusi tapahtumankuuntelija ja kirjoita Copilotille:
+
+```text
+Muokkaa tapahtumankuuntelijaa niin, että se kasvattaa valitun anekdootin äänimäärää votes-tilassa yhdellä. Luo uusi taulukko kopioimalla votes, kasvata indeksin selected arvoa ja päivitä tila setVotes-funktiolla. Lisää aikaisempaan console.logiin myös äänimäärä.
+```
+Tapahtumankuuntelija tulostaa nyt konsoliin valitun anekdootin sekä sen saaman äänimäärän.
+
+Lopuksi renderöimme valitun anekdootin äänimäärän näkymään:
+
+```text
+Renderöi valitun anekdootin äänimäärä nappien yläpuolelle. Voit poistaa console.login.
+```
+
 <h4>1.14*: anekdootit step3</h4>
 
 Ja sitten vielä lopullinen versio, joka näyttää eniten ääniä saaneen anekdootin:
@@ -1391,5 +1717,20 @@ Ja sitten vielä lopullinen versio, joka näyttää eniten ääniä saaneen anek
 Jos suurimman äänimäärän saaneita anekdootteja on useita, riittää että niistä näytetään yksi.
 
 Tämä oli osan viimeinen tehtävä, ja on aika pushata koodi GitHubiin ja merkata tehdyt tehtävät [palautussovellukseen](https://studies.cs.helsinki.fi/stats/courses/fullstackopen).
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Aloitetaan luomalla funktio, joka palauttaa eniten ääniä saaneen anekdootin:
+
+```text
+Lisää App-komponenttiin funktio, joka palauttaa eniten ääniä saaneen anekdootin, ei muuta. 
+```
+
+Tämän jälkeen haluamme renderöidä palautuvan anekdootin ja sen äänimäärän:
+
+```text
+Renderöi äänestetyin anekdootti uuden otsikon "Most voted anecdote" alle.
+Näytä kyseisen anekdootin äänimäärä käyttäen Math.max(...votes) funktiota.
+```
 
 </div>

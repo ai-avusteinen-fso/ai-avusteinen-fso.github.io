@@ -295,9 +295,67 @@ const App = () => {
 }
 ```
 
-  <h4>1.4: kurssitiedot step4</h4>
+<h4>Copilot-ohjeet tehtävälle</h4>
 
-Seuraavaksi laitetaan oliot taulukkoon, eli muuta  <i>App</i> :in muuttujamäärittelyt seuraavaan muotoon ja muuta sovelluksen kaikki osat vastaavasti:
+Päivitetään ensimmäisenä Content-komponentti.
+
+Maalaa komponentti ja kirjoita Copilotille:
+
+```text
+Käytä olioiden kenttiä: name={part1.name} ja exercises={part1.exercises} (sama part2 ja part3). Destrukturoi propsit siis parametreissä, mutta vain Content-komponentissa.
+EHDOTTOMASTI älä tee muita muutoksia.
+```
+
+Otetaan jo tässä vaiheessa propsien _destrukturointi_ käyttöön, koska se helpottaa huomattavasti näkemään mitä propseja komponentit käyttävät.
+
+Vertaa aiemmin propsit:
+
+```js
+const Content = (props)
+```
+
+Destrukturoinnin jälkeen:
+
+```js
+const Content = ({ part1, part2, part3 })
+```
+
+Kuten näemme, ei tarvitse arvuutella mitä propseja komponenttiin tuodaan, vaan ne ovat suoraan näkyvillä.
+
+Tuloksen pitäisi näyttää suurin piirtein tältä:
+
+```js
+const Content = ({ part1, part2, part3 }) => (
+  <div>
+  <Part name={part1.name} exercises={part1.exercises} />
+  <Part name={part2.name} exercises={part2.exercises} />
+  <Part name={part3.name} exercises={part3.exercises} />
+  </div>
+)
+```
+
+Otetaan destrukturointi käyttöön myös muissa komponenteissa:
+
+```text
+Muokkaa Header, Total ja Part -komponentit käyttämään myös propsien destrukturointia.
+```
+
+Nyt kaikki komponentit käyttävät destrukturointia.
+
+Seuraavaksi haluamme saada ohjelman toimimaan uusilla olioilla App-komponentissa:
+
+```text
+Korjaa App-komponentti käyttämään Content- ja Total-komponentteja niin, että:
+
+- Content saa propseina part1, part2 ja part3 olioita
+- Total saa propseina part1.exercises + part2.exercises + part3.exercises
+```
+
+Nyt App-komponentissa part-oliot syötetään oikein Content-komponentille ja part-olioiden exercises-kentät syötetään Total-komponentille.
+
+<h4>1.4: kurssitiedot step4</h4>
+
+Seuraavaksi laitetaan oliot taulukkoon, eli muuta <i>Appin</i> muuttujamäärittelyt seuraavaan muotoon ja muuta sovelluksen kaikki osat vastaavasti:
 
 ```js
 const App = () => {
@@ -343,6 +401,72 @@ const App = () => {
 }
 ```
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Muokataan ensin Content-komponentti vastaanottamaan parts-taulukko propsina.
+
+Maalaa Content-komponentti ja kirjoita Copilotille:
+
+```text
+Muokkaa Content-komponentti vastaanottamaan parts-taulukko propsina. Muokkaa Part vastaanottamaan name={parts[0].name} exercises={parts[0].exercises}.
+Partteja on aina kolme kappaletta. Älä tee vielä muita muutoksia.
+```
+
+Tarkastellaan nyt Content-komponenttia:
+
+```js
+const Content = ({ parts }) => {
+  return (
+    <>
+      <Part name={parts[0].name} exercises={parts[0].exercises} />
+      <Part name={parts[1].name} exercises={parts[1].exercises} />
+      <Part name={parts[2].name} exercises={parts[2].exercises} />
+    </>
+  )
+}
+```
+
+Komponentti saa nyt propsina **koko** parts-taulukon, joka on destrukturoituna komponentissa.
+
+Parts-taulukon alkioihin päästään käsiksi indeksillä, jonka avulla haluttu _part.name_ ja _part.exercise_ lähetetään propsina Part-komponentille.
+
+Seuraavaksi haluamme, että App-komponentti syöttää koko parts-taulukon propsina Content-komponentille. Verrattuna aiempaan, jossa propsina annettiin part1, part2 ja part3 erikseen.
+
+Maalaa App-komponentin return-osiosta:
+
+```js
+<Content part1={part1} part2={part2} part3={part3} />
+```
+
+ja kirjoita Copilotille:
+
+```text
+Syötä Content-komponentille koko parts-taulukko propsina.
+```
+
+Nyt Content-komponentti on toimiva uuden parts-taulukon kanssa. Lopuksi haluamme Total-komponentin toimivaksi.
+
+Maalaa Total-komponentti ja kirjoita Copilotille:
+
+```text
+Muokkaa Total-komponentti vastaanottamaan koko parts-taulukko propsina ja valikoimaan indeksillä exercises-kentät. Älä tee vielä muuta.
+```
+
+Nyt App-komponentin return-osiossa syötetään Total-komponentille:
+
+```js
+<Total exercises1={part1.exercises} exercises2={part2.exercises} exercises3={part3.exercises} />
+```
+
+Tämä ei toimi enää. Mieti, miten saisit toimivan lopputuloksen, kun Total-komponentti vastaanottaa nyt **koko** parts-taulukon propsina.
+
+<details>
+<summary>Avaa vinkki</summary>
+
+Katso, miten toteutimme tämän aiemmin App-komponentin Content-osiossa.
+
+</details>
+
   <h4>1.5: kurssitiedot step5</h4>
 
 Viedään muutos vielä yhtä askelta pidemmälle, eli tehdään kurssista ja sen osista yksi JavaScript-olio. Korjaa kaikki mikä menee rikki.
@@ -374,6 +498,52 @@ const App = () => {
   )
 }
 ```
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Huomaamme, että olion rakenne on muuttunut ja koodimme on taas rikki.
+
+Course-olion sisällä on nyt name-kenttä, joka kuvastaa siis course-olion nimeä.
+
+Course-olio myös sisältää nyt parts-taulukon, jonka sisällä on jo aiemmin käytettyjä pienempiä olioita.
+
+Aloitetaan korjaamalla Header-komponentti vastaanottamaan koko course-olio propsina.
+
+Maalaa Header-komponentti ja kirjoita Copilotille:
+
+```text
+Muokkaa Header-komponenttia siten, että se vastaanottaa koko course-olion ja käyttää sieltä course.name-kenttää.
+```
+
+Nyt Header-komponentti saa koko coursen propsina ja käyttää sieltä _course.name_-kenttää kurssin nimen esittämiseksi.
+
+App-komponentissa course annetaan jo oikein koko course-oliona, koska sen nimi ei muuttunut aikaisempaan nähden.
+
+Header-komponentti on nyt siis toimiva ja voimme siirtyä korjaamaan Content-komponenttia.
+
+Maalaa App-komponentista:
+
+ ```js
+<Content parts={parts}/>
+ ```
+
+ja kirjoita Copilotille:
+
+```text
+Muokkaa parts={course.parts} valitulle riville.
+```
+
+Nyt Content-komponentille välitetään täysin sama taulukko kuin aikaisemmin, mutta sen vain joutuu hakemaan vähän "syvemmältä" course-oliosta.
+
+Viimeisenä rikki on enää Total-komponentti, yritä korjata se itse.
+
+<p>&nbsp;</p>
+<details>
+
+<summary>Avaa vinkki</summary>
+
+Exercise-kentät löytyvät course.parts-taulukon sisältä.
+</details>
 
 </div>
 
