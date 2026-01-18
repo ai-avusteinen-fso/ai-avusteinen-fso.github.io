@@ -634,11 +634,64 @@ Sovelluksen täytyy nyt toimia <i>riippumatta kurssissa olevien osien määräst
 
 Varmista myös, että konsolissa ei näy mitään virheilmoituksia!
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+**Huom**. Tehtävät vaikeutuvat ja mahdollisia mystisiä ongelmia saattaa koitua myös Copilotilla tehdessä. Jos virheitä ilmenee, mitä ei ole käsitelty tekstissä, kopioi virhe Copilotille korjattavaksi.
+
+- Poista tai kommentoi Total-komponentti pois tässä vaiheessa. Voit käyttää /* code to comment... */ syntaksia kommentointiin. Poista se myös App-komponentin return osiosta.
+
+Maalaa App.jsx sisältö ja kirjoita Copilotille:
+
+```text
+Luo React-komponentti Course, joka saa course-objectin proppina. Course-komponentin tulee renderöidä kurssin nimi ja lista osista Content-komponentin avulla.
+```
+
+Copilot saattaa oma-aloitteisesti käyttää myös Header-komponenttia kurssin nimen esittämiseksi.
+
+Nyt kuitenkin, jos poistamme tai lisäämme course-objectiin osan (part) saamme virheilmoituksen konsoliin - tämän haluamme korjata.
+
+Kirjoita Copilotille:
+
+```text
+Muokkaa Content-komponenttia siten, että osien lukumäärä voi olla dynaaminen.
+```
+
+Copilot muutti nyt Content-komponentin sisällön dynaamiseksi käyttäen _map_-funktiota.
+
+Tarkista muutoksen toimivuus poistamalla App.jsx-tiedoston course-objektista esimerkiksi tämä osa:
+
+```js
+{
+  name: 'State of a component',
+  exercises: 14,
+  id: 3,
+},
+```
+
+Nyt sivulla pitäisi olla renderöitynä vain otsikko ja kaksi ensimmäistä kurssin osaa.
+
+![](../../images/2/copilot/2_1_1.png)
+
 <h4>2.2: kurssitiedot step7</h4>
 
 Ilmoita myös kurssin yhteenlaskettu tehtävien lukumäärä:
 
 ![](../../images/teht/9e.png)
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+- Kopioi Total-komponentti part 1 tehtävästä tai ota kommentointi pois, jos kommentoit sen.
+
+Haluamme taas kerran esittää _dynaamisesti_ kurssin tehtävien summan.
+Kirjoita Copilotille:
+
+```text
+Muokkaa Total-komponentti dynaamiseksi ja lisää se Course-komponentin loppuun renderöitäväksi
+```
+
+Nyt Total-komponentti laskee tehtävien summan dynaamisesti käyttäen reduce-funktiota.
+Testaa vielä muutokset muokkaamalla course-objektin osien määrää.
+
 
 <h4>2.3*: kurssitiedot step8</h4>
 
@@ -725,8 +778,40 @@ Sovelluksen ulkoasu voi olla esim. seuraava:
 
 ![](../../images/teht/10e.png)
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Kirjoita Copilotille:
+
+```text
+Mahdollista useamman Course-komponentin renderöinti App.jsx-tiedostossa
+```
+
+Copilot toteuttaa useamman Course-komponentin renderöinnin käyttämällä taas kerran hyväksi todettua map-funktiota. 
+
+
 <h4>2.5: erillinen moduuli</h4>
 
 Määrittele komponentti <i>Course</i> omana moduulinaan, jonka komponentti <i>App</i> importtaa. Voit sisällyttää kaikki kurssin alikomponentit samaan moduuliin.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Ideana on siis yksinkertaisesti siirtää kaikki muut komponentit paitsi _App_ pois App.jsx-tiedostosta.
+
+Varmista, että App.jsx on auki ja kirjoita Copilotille:
+
+```text
+Luo uusi tiedosto Course.jsx src:n juureen ja siirrä Course ja muut komponentit sinne ja poista ne App.jsx-tiedostosta ja importoi Course käyttöön.
+```
+
+Nyt Copilot loi uuden Course.jsx-tiedoston, joka sisältää Coursen ja komponentit mitä Course-komponentti käyttää.
+
+App.jsx jäi nyt hyvin siistiksi, importoimme Course-komponentin tiedoston yläreunassa:
+
+`import Course from './Course'`
+
+Copilot ei aina lisää tiedostopäätteitä, mutta lisää aina tiedostopäätte, sillä se tekee yksikäsitteiseksi, mikä tiedosto on kyseessä.
+
+`import Course from './Course.jsx'`
+
 
 </div>
