@@ -588,4 +588,28 @@ on portti 3001 jo jonkin muun sovelluksen, esim. jo käynnissä olevan JSON Serv
 
 Muuta sovellusta siten, että alkutila haetaan Axios-kirjaston avulla palvelimelta. Hoida datan hakeminen [Effect hookilla](https://react.dev/reference/react/useEffect).
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Avaa App.jsx ja kirjoita Copilotille aluksi ohjeet axios-riippuvuuden tuomiseen tiedostoon ja persons-taulukon tyhjentämiseen:
+
+```text
+Poista persons-tilan kovakoodatut alkutiedot ja aseta se tyhjäksi taulukoksi. Lisää tiedoston alkuun axios-kirjaston import.
+```
+
+Annetaan seuraavaksi ohjeet datan hakemiseen useEffect-hookin avulla:
+
+```text
+Käytä useEffect-hookia hakemaan puhelinluettelon tiedot osoitteesta http://localhost:3001/persons käyttäen axios.get-metodia. Varmista, että efekti ajetaan vain kerran sovelluksen latautuessa.
+```
+
+Konsolin Network-tabilta voimme tarkastella tarkemmin tapahtumia.
+
+Sivun latauksen yhteydessä lähetimme GET-pyynnön osoitteeseen http://localhost:3001/persons
+
+![](../../images/2/copilot/2_11_get_req.png)
+
+Viereiseltä Response-tabilta näemme, mitä olemme saaneet paluupostina.
+
+![](../../images/2/copilot/2_11_response.png)
+
 </div>
