@@ -463,6 +463,31 @@ Huomaa React Developer Toolsin käyttö!
 - voit käyttää kentän <i>key</i> arvona henkilön nimeä
 - muista estää lomakkeen lähetyksen oletusarvoinen toiminta
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Alkutilanne selaimessa pitäisi näyttää tältä:
+
+![](../../images/2/copilot/2_6.png)
+
+Aloitetaan antamalla Copilotille ohjeet syötteen tallentamisesta newName-tilaan:
+
+```text
+Tee nimen input-kentästä hallittu komponentti (controlled component). Käytä olemassa olevaa newName-tilaa ja luo sille onChange-käsittelijä.
+```
+
+Tämän jälkeen lisätään lomakkeelle käsittelijä:
+
+```text
+Luo funktio addPerson, joka estää lomakkeen oletustoiminnan (reload) ja lisää newName-muuttujan sisällön persons-taulukkoon uutena oliona. Tyhjennä lopuksi newName. Kytke funktio lomakkeen onSubmit-tapahtumaan.
+```
+
+Lopuksi listataan persons-taulukon henkilöt näkyviin käyttäjälle:
+
+```text
+Listaa kaikki persons-taulukon henkilöt <h2>Numbers</h2>-otsikon alle. Käytä map-funktiota ja aseta jokaiselle elementille key-attribuutiksi henkilön nimi.
+```
+
+
 <h4>2.7: puhelinluettelo step2</h4>
 
 Jos lisättävä nimi on jo sovelluksen tiedossa, estä lisäys. Taulukolla on lukuisia sopivia [metodeja](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) tehtävän tekemiseen.
@@ -489,6 +514,16 @@ Template stringin käyttö antaa ammattimaisen vaikutelman, vaikka sama toki hoi
 newName + ' is already added to phonebook'
 ```
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Kirjoita Copilotille:
+
+```text
+Lisää sovellukseen virheenkäsittely, jos syötetty nimi on jo persons-taulukossa. Anna mahdollinen virhe Alerttina. Hyödynnä template-stringiä.
+```
+
+Copilot lisäsi saman käyttäjänimen tarkistuksen lomakkeenkäsittelijään.
+
 <h4>2.8: puhelinluettelo step3</h4>
 
 Lisää sovellukseen mahdollisuus antaa henkilöille puhelinnumero. Tarvitset siis lomakkeeseen myös toisen <i>input</i>-elementin (ja sille oman muutoksenkäsittelijän):
@@ -504,6 +539,33 @@ Lisää sovellukseen mahdollisuus antaa henkilöille puhelinnumero. Tarvitset si
 Sovellus voi näyttää tässä vaiheessa seuraavalta. Kuvassa myös [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi):in tarjoama näkymä komponentin <i>App</i> tilaan:
 
 ![](../../images/2/12ea.png)
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Lisätään aluksi input-kenttä numerolle. Kirjoita Copilotille:
+
+```text
+Luo "name:"-kentän alle "number:"-kenttä. Älä tee vielä muuta.
+```
+
+Seuraavaksi siihen liittyvä newNumber-tila sekä sen onChange-käsittelijä:
+
+```text
+Lisää newNumber-tila useState-hookilla ja luo sille handleNumberChange-käsittelijä, joka päivittää tilaa input-kentän arvolla. Muokkaa input-kentän value={newNumber} ja onChange={handleNumberChange}.
+```
+
+Tämän jälkeen päivitetään addPerson-funktiota tallentamaan myös puhelinnumerot:
+
+```text
+Päivitä addPerson-funktio siten, että se tallentaa myös numeron persons-taulukkoon uuden olion mukana. Tyhjennä newNumber-kenttä tallennuksen jälkeen.
+```
+
+Maalaa lopuksi persons.map-osio App-komponentin return-lohkosta ja kirjoita Copilotille:
+
+```text
+Päivitä näyttämään myös puhelinnumerot.
+```
+
 
 <h4>2.9*: puhelinluettelo step4</h4>
 
@@ -526,6 +588,32 @@ const App = () => {
 
   // ...
 }
+```
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Pyydetään ensin Copilottia lisäämään input-kenttä filtterille sekä siihen liittyvä filter-tila ja tilan käsittelijä:
+
+```text
+Lisää filter-tila useState-hookilla ja luo sille handleFilterChange-käsittelijä. Älä tee vielä muuta.
+```
+
+Seuraavaksi luodaan uusi-input kenttä ja otetaan sille käyttöön juuri luotu filter-tila ja käsittelijä:
+
+```text
+Lisää sovelluksen alkuun (ennen lomaketta) uusi input-kenttä "Filter:". Käytä siinä filter-tilaa value={filter} ja käsittelijää onChange-kohdassa.
+```
+
+Lisätään vielä uusi otsikko sivulle ennen uuden henkilön lisäämistä:
+
+```text
+Lisää otsikko <h2>Add a new</h2> filter-inputin jälkeen.
+```
+
+Seuraavaksi annetaan Copilotille ohjeet filtteröidyn listan näyttämiseen:
+
+```text
+Luo muuttuja personsToShow, joka sisältää ne henkilöt, joiden nimi sisältää filter-tilassa olevan merkkijonon. Tee vertailusta kirjainkoosta riippumaton (case-insensitive). Päivitä renderöity lista käyttämään tätä uutta muuttujaa.
 ```
 
 <h4>2.10: puhelinluettelo step5</h4>
@@ -561,5 +649,43 @@ const App = () => {
 ```
 
 **HUOM**: Saatat törmätä ongelmiin jos määrittelet komponentteja "väärässä paikassa". Nyt kannattaakin ehdottomasti kerrata edellisen osan luku [älä määrittele komponenttia komponentin sisällä](/osa1/monimutkaisempi_tila_reactin_debuggaus#ala-maarittele-komponenttia-komponentin-sisalla).
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Luo uusi tyhjä kansio src-kansion juureen nimeltä "components", jonka jälkeen tehdään uudet komponentit yksi kerrallaan.
+
+Aloitetaan Filter-komponentista. Pidä App.jsx-tiedosto auki ja kirjoita Copilotille:
+
+```text
+Luo uusi komponentti Filter components-kansioon. Filter-komponentti hoitaa hakukentän renderöinnin ja saa propseina filter-arvon ja handlerin.
+```
+
+Seuraavaksi luodaan PersonForm-komponentti:
+
+```text
+Luo uusi komponentti PersonForm components-kansioon. PersonForm-komponentti hoitaa lomakkeen ja sen kenttien renderöinnin. Komponentti saa propseina:
+
+- Submit-handlerin
+- Nimen arvon (newName)
+- Nimen change-handlerin
+- Numeron arvon (newNumber)
+- Numeron change-handlerin
+```
+
+Kolmantena luodaan vielä Persons-komponentti, joka renderöi taulukon henkilöistä:
+
+```text
+Luo uusi komponentti Persons components-kansioon. Persons-komponentti hoitaa henkilöiden renderöinnin <ul> ja saa propseina persons-taulukon.
+```
+
+Nyt tarvittavat komponentit on luotu erilliseen components-kansioon ja seuraavaksi refaktoroidaan App.jsx-tiedosto käyttämään niitä:
+
+```text
+Importoi uudet komponentit Filter, PersonForm ja Persons App.jsx-tiedostossa. Refaktoroi App-komponentti käyttämään komponentteja.
+```
+
+App-komponentti säilyttää edelleen kaiken tilan ja logiikan. Alikomponentit ovat puhtaita presentaatioita ja saavat datan ja event-handlerit propsien kautta.
+
+![](../../images/2/copilot/2_10.png)
 
 </div>
