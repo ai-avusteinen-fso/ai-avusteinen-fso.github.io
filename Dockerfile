@@ -29,12 +29,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
 
-RUN case "${TARGETARCH}" in \
-        "arm64") arch="arm64" ;; \
-        "amd64") arch="x64" ;; \
-        *) echo "Unsupported architecture: ${TARGETARCH}"; exit 1 ;; \
-    esac \
- && curl -fsSL https://github.com/libvips/libvips/releases/download/v${VIPS_VERSION}/vips-${VIPS_VERSION}.tar.gz -o /tmp/vips.tar.gz \
+RUN curl -fsSL https://github.com/libvips/libvips/releases/download/v${VIPS_VERSION}/vips-${VIPS_VERSION}.tar.gz -o /tmp/vips.tar.gz \
  && tar -xzf /tmp/vips.tar.gz -C /tmp \
  && cd /tmp/vips-${VIPS_VERSION} \
  && ./configure --disable-debug --without-python \
@@ -46,7 +41,12 @@ RUN case "${TARGETARCH}" in \
 # Some builds expect <glib-object.h> at /usr/include
 RUN test -f /usr/include/glib-object.h || ln -s /usr/include/glib-2.0/gobject/glib-object.h /usr/include/glib-object.h
 
-RUN curl -fsSL https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${TARGETARCH}.tar.xz -o /tmp/node.tar.xz \
+RUN case "${TARGETARCH}" in \
+        "arm64") arch="arm64" ;; \
+        "amd64") arch="x64" ;; \
+        *) echo "Unsupported architecture: ${TARGETARCH}"; exit 1 ;; \
+    esac \
+&& curl -fsSL https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-${arch}.tar.xz -o /tmp/node.tar.xz \
  && tar -xJf /tmp/node.tar.xz -C /usr/local --strip-components=1 \
  && rm /tmp/node.tar.xz \
  && node -v && npm -v
