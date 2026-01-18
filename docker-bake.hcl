@@ -3,7 +3,7 @@ group "default" {
 }
 
 target "fullstack" {
-  context = "./fullstack-hy2020.github.io"
+  context = "."
   tags    = ["fullstack:latest"]
   load    = true
 }

@@ -1,5 +1,6 @@
 services:
   web:
+    image: fullstack:latest
     build: .
     ports:
       - "8000:8000"
