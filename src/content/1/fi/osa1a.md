@@ -681,6 +681,19 @@ export default App
 
 ja poista ylimääräiset tiedostot <i>App.css</i> ja <i>index.css</i> ja hakemisto <i>assets</i>.
 
+Lopputuloksen tulisi selaimessa näyttää tältä:
+
+```
+Half Stack application development
+Fundamentals of React 10
+
+Using props to pass data 7
+
+State of a component 14
+
+Number of exercises 31
+```
+
 Koko sovellus on nyt ikävästi yhdessä komponentissa. Refaktoroi sovelluksen koodi siten, että se koostuu kolmesta uudesta komponentista: <i>Header</i>, <i>Content</i> ja <i>Total</i>. Kaikki data pidetään edelleen komponentissa <i>App</i>, joka välittää tarpeelliset tiedot kullekin komponentille <i>props:ien</i> avulla. <i>Header</i> huolehtii kurssin nimen renderöimisestä, <i>Content</i> osista ja niiden tehtävämääristä ja <i>Total</i> tehtävien yhteismäärästä.
 
 Tee uudet komponentit tiedostoon <i>App.jsx</i>.
@@ -709,6 +722,156 @@ Huolellinen, pienin askelin eteneminen saattaa tuntua hitaalta, mutta se on itse
 
 eli Martinin mukaan pienin askelin tapahtuva huolellinen eteneminen on jopa ainoa tapa olla nopea.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+**HUOM**. Muista tehtävän **jokaisen** vaiheen jälkeen testata sovelluksen toiminta selaimessa ja pidä konsoli auki.
+
+Aloitetaan pyytämällä Copilottia erottamaan osia komponenteiksi. Maalaat hiirellä osan koodia ja pyydät sitä luomaan komponentin.
+
+Maalaa hiirellä:
+
+```html
+<h1>{course}</h1>
+```
+
+ja kirjoita seuraava Copilotille, mutta varmista, että Agent-tila on päällä. Kiellämme erikseen destrukturoinnin, joka tulee myöhemmin tutuksi.
+
+```text
+Erota tämä omaksi komponentiksi nimeltä Header. Pidä komponentti App.jsx-tiedostossa. Älä destrukturoi propseja.
+```
+
+Tiedoston yläosaan ilmestyy nyt uusi komponentti:
+
+```js
+const Header = (props) => {
+  return (
+    <h1>{props.course}</h1>
+  )
+}
+```
+
+Jota kutsutaan App-komponentissa:
+
+```js
+<Header course={course} />
+```
+
+Sitten maalaa:
+
+```html
+<p>{part1} {exercises1}</p>
+<p>{part2} {exercises2}</p>
+<p>{part3} {exercises3}</p>
+```
+
+Ja kirjoita Copilotille:
+
+```text
+Tee tästä oma komponentti Content, joka saa propseina part1,part2,part3 ja niiden exercises. Komponenttiin ei sisällytetä harjoitusten summaa.
+```
+
+Voit toki kirjoittaa promptin monella tavalla - edellä mainittu tapa estää Copilottia tekemästä asiaa turhan monimutkaisesti juuri nyt.
+
+Näin saamme tiedoston yläreunaan uuden Content-komponentin, joka saa propseina tarvittavan datan.
+
+```js
+const Content = (props) => {
+  return (
+    <>
+      <p>
+        {props.part1} {props.exercises1}
+      </p>
+      <p>
+        {props.part2} {props.exercises2}
+      </p>
+      <p>
+        {props.part3} {props.exercises3}
+      </p>
+    </>
+  )
+}
+```
+
+Ja tätä tietysti kutsutaan App-komponentissa:
+
+```js
+<Content
+  part1={part1}
+  exercises1={exercises1}
+  part2={part2}
+  exercises2={exercises2}
+  part3={part3}
+  exercises3={exercises3}
+/>
+```
+
+Lopuksi tehdään vielä Total-komponentti, joka summaa harjoitusten lukumäärät.
+
+Maalaa:
+
+ ```html
+ <p>Number of exercises {exercises1 + exercises2 + exercises3}</p>
+ ```
+
+ja kirjoita Copilotille seuraava, huomaa miten voimme viitata vain "tee tästä" koska Copilotin kontekstina on juuri maalattu koodi:
+
+```text
+Tee tästä oma komponentti Total, joka saa propseina kaikkien parttien harjoitukset.
+```
+
+Ja näin saimme uuden komponentin _Total_, joka saa propseina harjoitusten lukumäärät, summaa ne yhteen ja renderöi summan.
+
+```js
+const Total = (props) => {
+  const total = props.exercises1 + props.exercises2 + props.exercises3
+
+  return <p>Number of exercises {total}</p>
+}
+```
+
+Nyt App-komponentti näyttänee seuraavalta - koska Copilot generoi koodia joka kerta hieman eri tavalla, sinun koodisi saattaa poiketa allaolevasta hieman:
+
+```js
+const App = () => {
+  const course = 'Half Stack application development'
+  const part1 = 'Fundamentals of React'
+  const exercises1 = 10
+  const part2 = 'Using props to pass data'
+  const exercises2 = 7
+  const part3 = 'State of a component'
+  const exercises3 = 14
+
+  return (
+    <div>
+      <Header course={course} />
+      <Content
+        part1={part1}
+        exercises1={exercises1}
+        part2={part2}
+        exercises2={exercises2}
+        part3={part3}
+        exercises3={exercises3}
+      />
+      <Total
+        exercises1={exercises1}
+        exercises2={exercises2}
+        exercises3={exercises3}
+      />
+    </div>
+  )
+}
+```
+
+Tehtävä on mahdollista toteuttaa huomattavasti elegantimmin, mutta olennaista tässä on ymmärtää, miten dataa välitetään komponenteille ja miten isot komponentit voidaan pilkkoa pienempiin komponentteihin.
+
+Jos et käynnistänyt vielä kehityspalvelinta, kirjoita terminaaliin: 
+
+```bash
+npm run dev
+```
+
+Kokeile vaihtaa **exercises**-lukua: päivittyykö Total automaattisesti?
+
 <h4>1.2: kurssitiedot, step2</h4>
 
 Refaktoroi vielä komponentti <i>Content</i> siten, että se ei itse renderöi yhdenkään osan nimeä eikä sen tehtävälukumäärää vaan ainoastaan kolme <i>Part</i>-nimistä komponenttia, joista kukin siis renderöi yhden osan nimen ja tehtävämäärän.
@@ -721,6 +884,62 @@ const Content = ... {
       <Part .../>
       <Part .../>
     </div>
+  )
+}
+```
+
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Aloitetaan luomalla uusi Part-komponentti.
+
+Kirjoita Copilotille:
+
+```text
+Luo Part-komponentti samaan tiedostoon, joka renderöi <p>{name} {exercises}</p> ja ottaa propsit name ja exercises.
+```
+
+**HUOM**. Tässä vaiheessa ei tarvitse vielä maalata mitään, sillä Copilot voi luoda Part-komponentin suoraan Header-komponentin yläpuolelle.
+
+Huomaa, että Content-komponentissa on kolme lähes identtistä `<p>`-elementtiä.
+Seuraavaksi korvaamme ne Part-komponenteilla.
+
+Maalaa Content-komponentti:
+
+```js
+const Content = (props) => {
+  return (
+    <>
+      <p>
+        {props.part1} {props.exercises1}
+      </p>
+      <p>
+        {props.part2} {props.exercises2}
+      </p>
+      <p>
+        {props.part3} {props.exercises3}
+      </p>
+    </>
+  )
+}
+```
+
+ja kirjoita Copilotille:
+
+```text
+Refaktoroi Content-komponentti käyttämään useampaa Part-komponenttia.
+```
+
+Nyt saimme Content-komponentin, joka hyödyntää useaa Part-komponenttia.
+
+```js
+const Content = (props) => {
+  return (
+    <>
+      <Part name={props.part1} exercises={props.exercises1} />
+      <Part name={props.part2} exercises={props.exercises2} />
+      <Part name={props.part3} exercises={props.exercises3} />
+    </>
   )
 }
 ```
