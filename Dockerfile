@@ -5,6 +5,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV NODE_VERSION=10.24.1
 ENV VIPS_VERSION=8.10.6
 
+ENV PATH=/node_modules/.bin:$PATH
+
 # Base tooling + Python2 for node-gyp (Node 10) + build toolchain
 RUN apt-get update && apt-get install -y --no-install-recommends \
   ca-certificates curl xz-utils \
@@ -27,7 +29,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
 
-RUN curl -fsSL https://github.com/libvips/libvips/releases/download/v${VIPS_VERSION}/vips-${VIPS_VERSION}.tar.gz -o /tmp/vips.tar.gz \
+RUN case "${TARGETARCH}" in \
+        "arm64") arch="arm64" ;; \
+        "amd64") arch="x64" ;; \
+        *) echo "Unsupported architecture: ${TARGETARCH}"; exit 1 ;; \
+    esac \
+ && curl -fsSL https://github.com/libvips/libvips/releases/download/v${VIPS_VERSION}/vips-${VIPS_VERSION}.tar.gz -o /tmp/vips.tar.gz \
  && tar -xzf /tmp/vips.tar.gz -C /tmp \
  && cd /tmp/vips-${VIPS_VERSION} \
  && ./configure --disable-debug --without-python \
@@ -53,6 +60,5 @@ WORKDIR /app
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 
-ENV PATH=/node_modules/.bin:$PATH
 
 ENTRYPOINT ["/entrypoint.sh"]
