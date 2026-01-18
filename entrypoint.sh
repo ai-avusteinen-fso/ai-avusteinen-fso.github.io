@@ -4,7 +4,18 @@ set -eEuo pipefail
 
 case "${MODE:-}" in
   "build")
-    exec npm run build
+    npm run build
+
+    if [ ! -d /output ]; then
+      echo " -- Build completed, no /output volume mounted, skipping copy"
+      exit 0
+    fi
+
+    rm -rf /output/*
+    cp -r public/* /output/
+
+    echo " -- Build completed, output copied to /output"
+    exit 0
     ;;
   "dev")
     npm run build

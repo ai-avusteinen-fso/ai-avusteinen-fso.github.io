@@ -7,3 +7,5 @@ services:
       - MODE=${MODE:-dev}
     volumes:
       - ./:/app
+# to test output copying, uncomment the following line:
+#      - /tmp/output:/output
