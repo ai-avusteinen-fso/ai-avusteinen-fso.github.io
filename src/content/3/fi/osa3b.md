@@ -446,6 +446,33 @@ Laita backend toimimaan edellisessä osassa tehdyn puhelinluettelon frontendin k
 
 Joudut todennäköisesti tekemään frontendiin erinäisiä pieniä muutoksia ainakin backendin oletettujen urlien osalta. Muista pitää selaimen konsoli koko ajan auki. Jos jotkut HTTP-pyynnöt epäonnistuvat, kannattaa katsoa <i>Network</i>-välilehdeltä, mitä tapahtuu. Pidä myös silmällä, mitä palvelimen konsolissa tapahtuu. Jos et tehnyt edellistä tehtävää, kannattaa POST-pyyntöä käsittelevässä tapahtumankäsittelijässä tulostaa konsoliin mukana tuleva data eli <i>request.body</i>.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Jos et ole vielä lisännyt CORS-tukea, navigoi index.js-tiedostoon ja kirjoita Copilotille:
+
+```text
+Lisää CORS-tuki käyttämällä 'cors'-pakettia. Tuo cors-moduuli, ja määrittele app käyttämään sitä ennen kaikkia reittejä.
+```
+
+Jatketaan hieman alustusta ilman Copilottia.
+
+Käynnistä Express-palvelimesi tässä vaiheessa jos se ei jo ole päällä.
+
+Avaa uusi terminaali-ikkuna ja navigoi sillä osan 2 puhelinluettelo tehtäväkansioon ja käynnistä Vite-kehityspalvelin.
+
+Navigoi selaimeen kehityspalvelimen localhost-osoitteeseen, avaa konsoli ja tarkista virheet.
+
+Voimme huomata heti virheen:
+ ``GET http://localhost:3001/persons 404 (Not Found)``, eli frontend yrittää lähettää GET-pyyntöä tähän osoitteeseen, mutta sitä ei löydy.
+
+Tämä johtuu siitä, että frontendin personService.js-tiedostossa _baseUrl_-muuttuja on hieman väärä. Muuta siis tiedoston _baseUrl_-muuttuja vastaamaan backendin oikeaa base endpointtia.
+
+![Frontend personService.js corrected baseUrl variable](../../images/3/copilot/3_9_baseUrl.png)
+
+Nyt sovelluksen osien välinen kommunikointi pitäisi toimia ja numeroiden näkyä frontendissä.
+
+Kokeile myös lisätä uusi henkilö ja poistaa se.
+
 #### 3.10 puhelinluettelon backend step10
 
 Vie sovelluksen backend Internetiin, esim. Fly.io:n tai Renderiin. Jos käytät Fly.io:ta, komennot tulee suorittaa backendin juurihakemistossa (eli samassa kansiossa, jossa backendin <i>package.json</i>-tiedosto sijaitsee).
@@ -456,6 +483,22 @@ Testaa selaimen ja Postmanin tai VS Coden REST-clientin avulla, että Internetis
 
 Tee repositorion juureen tiedosto README.md ja lisää siihen linkki Internetissä olevaan sovellukseesi.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Tehtävässä ei tarvita juurikaan koodin kirjoittamista, joten Copilot ei suoranaisesti luo meille mitään tällä kertaa.
+
+Käytä Copilottia selittämään yksittäisiä asioita, jos et niitä ymmärrä.
+
+Jos haluat testata Renderin palvelua suoraan frontendistä, muuta taas vain personServices.js-tiedostosta _baseUrl_-muuttujaa.
+
+```js
+const baseUrl = 'https://full-stack-open-sfu8.onrender.com/api/persons'
+```
+
+**Huom.** Urlin alkuosa on mahdollisesti erilainen riippuen GitHub-repositoryn nimestä.
+
+Tarkastele konsolia frontendissä! _Network_-tabilta näemme nyt, että pyynnöt ohjautuvat Renderin urliin, eikä _localhostiin_.
+
 #### 3.11 puhelinluettelo full stack
 
 Generoi frontendistä tuotantoversio ja lisää se Internetissä olevaan sovellukseesi tässä osassa esiteltyä menetelmää noudattaen.
@@ -465,5 +508,77 @@ Huolehdi myös, että frontend toimii edelleen myös paikallisesti.
 Jos käytät Renderiä, varmista, että hakemisto <i>dist</i> ole gitignoroituna projektissasi.
 
 **HUOM:** Frontendiä ei julkaista suoraan missään vaiheessa tämän osan aikana. Vain backend-repositorio viedään Internetiin. Frontendin tuotantoversio lisätään backend-repositorioon, ja backend näyttää sen pääsivunaan kuten kohdassa [Staattisten tiedostojen tarjoaminen backendistä](/osa3/sovellus_internetiin#staattisten-tiedostojen-tarjoaminen-backendista) on kuvattu.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Tehtävä on taas sen luontoinen, että käytä Copilot chattia selittämään asioita, joita et ymmärrä.
+
+Käydään vaihe kerrallaan tehtävä kuitenkin läpi:
+
+**1. vaihe**
+
+Muuta taas frontend-kansiossa _personService.js_-tiedostossa _baseUrl_-muuttuja suhteelliseksi poluksi:
+ 
+```js
+const baseUrl = '/api/persons';
+``` 
+
+Tämä tehdään, koska seuraavaksi frontendin tuotantoversio sijoitetaan suoraan backendin palvelimelle (Render). Kun sekä frontend että backend ovat samassa domainissa ja samassa palvelussa, ei enää tarvita täydellistä URL-osoitetta.
+
+**2. vaihe**
+ 
+Lisää ylläannetuissa ohjeissa oleva koodi-snipetti frontendin _vite.config.js_-tiedostoon.
+
+```js
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+    }
+  },
+})
+```
+
+_Proxy_ lisätään Viten konfiguraatioon sitä varten, että voimme edelleen käyttää lokaalia front-back-yhdistelmää sovellusta kehittäessä.
+
+Proxy kuuntelee ``/api``-alkuisia pyyntöjä ja ohjaa ne lokaaliin backendiin 3001-porttiin.
+
+_Vite.config_ ei siirry tuotantoversioon (dist), minkä vuoksi Renderin sivulla proxy-ohjausta ei tapahdu.
+
+**3. vaihe**
+
+Seuraavaksi voimme _buildata_ tuotantoversion frontendistä.
+
+Kirjoita frontend-kansiossa terminaaliin:
+
+```bash
+npm run build
+```
+
+Kansion juureen ilmestyy uusi _dist_-kansio. Kopioi kansio backend-kansion juureen ja varmista, ettei se ole _.gitignore_-tiedostossa.
+
+**4. vaihe**
+
+Lisää backendin _index.js_-tiedoston alkuun:
+
+```js
+app.use(express.static('dist'))
+```
+
+Tämä rivi lisätään, jotta Express voi tarjota frontendin tuotantobuildin staattisia tiedostoja suoraan selaimelle.
+
+Kommitoi muutokset ja pushaa ne githubiin.
+
+Deployaa Render-projekti uudelleen viimeisellä commitilla, jos se ei ole sitä automaattisesti tehnyt:
+
+![Render - picture of manual redeployment](../../images/3/copilot/3_11_Render.png)
+
+Nyt voit testata sovelluksen toiminnan Renderissä. Sovelluksen pitäisi toimia nyt täysin internettiin 'deployattuna'.
+
+Käynnistä myös frontend ja backend lokaalisti ja kokeile toimiiko proxy oikein.
 
 </div>
