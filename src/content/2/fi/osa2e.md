@@ -720,7 +720,7 @@ Kun olet saanut App-komponentin käyttämään Filter-komponenttia, on aika hake
 Avaa App.jsx ja kirjoita Copilotille:
 
 ```text
-Luo useEffect-hook, joka tekee GET-pyynnön osoitteeseen d ja asettaa maat countries-taulukkoon.
+Luo useEffect-hook, joka tekee GET-pyynnön osoitteeseen https://studies.cs.helsinki.fi/restcountries/api/all ja asettaa maat countries-taulukkoon.
 ```
 
 Nyt maat haetaan API:sta ja asetetaan countries-taulukkoon, mutta taulukon sisältöä ei vielä renderöidä.
