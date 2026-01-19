@@ -719,9 +719,43 @@ Palataan jälleen puhelinluettelon pariin.
 
 Tällä hetkellä luetteloon lisättäviä uusia numeroita ei synkronoida palvelimelle. Korjaa tilanne.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Muokataan addPerson-funktiota App.jsx-tiedostossa:
+
+```text
+Muokkaa addPerson()-funktiota POSTaamaan uusi henkilö http://localhost:3001/persons -endpointtiin.
+```
+
+Lisää uusi nimi + numero ja käy katsomassa selaimen osoitteessa http://localhost:3001/persons.
+
+Huomaa uniikki "id" juuri lisätyissä nimissä. JSON-serveri lisää automaattisesti uniikin id-arvon, jos sitä ei itse lisätä.
+
 <h4>2.13: puhelinluettelo step8</h4>
 
 Siirrä palvelimen kanssa kommunikoinnista vastaava toiminnallisuus omaan moduuliin tämän osan materiaalissa olevan esimerkin tapaan.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Luo src-kansioon uusi kansio 'services' ja lisää sinne tyhjä JavaScript-tiedosto 'personService.js'.
+
+Avaa App.jsx-tiedosto ja kirjoita Copilotille:
+
+```text
+Refaktoroi App.jsx GET-pyyntö uuteen funktioon nimeltä 'getAll' personService.js-tiedostoon. Älä tee vielä muuta.
+```
+
+Siirretään seuraavaksi myös uuden henkilön lisääminen personService.js-tiedostoon:
+
+```text
+Lisää personService.js-tiedostoon create(person)-funktio, joka POSTaa uuden henkilön /persons-endpointtiin ja palauttaa lisätyn henkilön tiedot. 
+```
+
+Lopuksi refaktoroidaan App.jsx-tiedosto käyttämään uutta service-tiedostoa:
+
+```text
+Importoi uudet getAll() ja create() -funktiot App.jsx-tiedostossa ja refaktoroi App käyttämään niitä.
+```
 
 <h4>2.14: puhelinluettelo step9</h4>
 
@@ -742,6 +776,43 @@ const delete = (id) => {
 }
 ```
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Aloitetaan taas vaiheittain lisäämällä aluksi Delete painike. Kirjoita Copilotille:
+
+```text
+Lisää Persons-tiedostoon jokaiselle riville 'Delete' painike.
+```
+
+Tämän jälkeen lisätään App.jsx Delete-painikkeen käsittelijä:
+
+```text
+Lisää App.jsx handleDelete-funktio ja päivitä Persons-komponentti käyttämään sitä. Kun painiketta klikataan, käytä window.confirm kysymään "Delete ${p.name} ?".
+Jos käyttäjä painaa OK, tee console.log ja tulosta poistetun henkilön nimi ja id.
+```
+
+Meillä on nyt painikkeet, jotka avaavat window.confirm-vahvistusikkunan. Vahvistuksen jälkeen konsoliin tulostetaan poistettavan kohteen nimi ja id.
+Säilytetään handleDelete-käsittelijä App.jsx:ssä seuraavia vaiheita ajatellen.
+
+Konsoliin pitäisi nyt tulostua henkilön nimi ja id, kun painetaan deleteä, ei vielä muuta.
+
+Seuraavaksi toteutetaan poisto JSON-serveriltä.
+Aloitetaan lisäämällä deletePerson(id)-funktio:
+
+```text
+Lisää personService.js:ään deletePerson(id)-funktio, joka tekee axios.delete(baseUrl/id), palautetaan serverin vastaus.
+```
+
+Muokataan vielä App.jsx käyttämään uutta deletePerson(id)-funktiota:
+
+```text
+Muokkaa App.jsx:ää siten, että handleDeletessa kutsutaan personService.deletePerson ja poistetaan henkilö tilasta (setPersons).
+Käytä .catch-rakennetta ja käsittele mahdolliset virhetilanteet.
+Voit poistaa aikaisemman console.log-kutsun.
+```
+
+Poistuuko henkilö serveriltä? ``http://localhost:3001/persons`` (Päivitä sivu).
+
 <h4>2.15*: puhelinluettelo step10</h4>
 
 <i>Miksi tehtävä on merkattu tähdellä? Selitys asiaan [täällä](/osa0/yleista#suoritustapa).</i>
@@ -751,5 +822,48 @@ Muuta toiminnallisuutta siten, että jos jo olemassa olevalle henkilölle lisät
 Jos henkilön tiedot löytyvät jo luettelosta, voi ohjelma kysyä käyttäjältä varmistuksen:
 
 ![](../../images/teht/16e.png)
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Tehdään vaiheittain lisäämällä aluksi päivitysfunktio. Kirjoita Copilotille:
+
+```text
+Luo personServiceen funktio updatePersonNumber() - funktio saa parametrina person-olion.
+console.loggaa id ja numero, älä tee vielä muuta.
+```
+
+Päivitetään seuraavaksi App.jsx käyttämään tätä uutta funktiota:
+
+```text
+Muokkaa App.jsx:n handleSubmit-funktiota siten, että jos uusi nimi löytyy jo persons-tilasta, kysytään window.confirm(`${p.name} is already added to phonebook, replace the old number with a new one?`).
+Jos käyttäjä painaa OK, suoritetaan vain personServices.updatePersonNumber(updatedPerson).
+```
+
+Testaa lisätä henkilö selaimessa, joka on jo puhelinluettelossa esim. Arto Hellas.
+Tässä vaiheessa päivitettävän henkilön id ja numero tulostetaan konsoliin.
+
+Seuraavaksi päivitämme numeron JSON-serverillä PUT-pyynnöllä ja päivitämme muutoksen myös sovelluksen tilaan.
+
+Aloitetaan muokkaamalla updatePersonNumber-funktiota:
+
+```text
+Muokkaa updatePersonNumber-funktiota tekemään axios.put(baseUrl/id, newPerson)-kutsu ja palautetaan serverin vastaus.
+```
+
+Tämän jälkeen muokataan vielä App.jsx-tiedostoa:
+
+```text
+Muokkaa App.jsx handleSubmitia päivittämään persons-tila lopuksi.
+Käytä .catch ja käsittele mahdolliset virhetilanteet.
+Voit poistaa aikaisemman console.log-kutsun.
+```
+
+Päivitä jo olemassa oleva yhteystieto ja varmista, että päivitys menee JSON-serverille ``http://localhost:3001/persons``.
+Varmista myös, että sovelluksen tila päivittyy ja uusi numero renderöidään.
+
+Testataan lopuksi vielä virheenkäsittely.
+Sulje JSON-serveri komentoriviltä ja yritä nyt uudestaan päivittää jo olemassa olevaa yhteystietoa.
+
+Kuten huomaamme, Copilot generoi catch-osioon koodin, joka suorittaa Alertin virheen tapahtuessa.
 
 </div>
