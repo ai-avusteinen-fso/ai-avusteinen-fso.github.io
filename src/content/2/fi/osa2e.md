@@ -302,6 +302,77 @@ Toteuta osan 2 esimerkin [parempi virheilmoitus](/osa2/tyylien_lisaaminen_react_
 
 ![](../../images/2/27e.png)
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Luo ensin tyhjä index.css-tiedosto src-kansioon.
+
+Kirjoitetaan nyt ensimmäiset CSS-luokat. Avaa tiedosto ja kirjoita Copilotille:
+
+```text
+Määrittele index.css .alert-success -luokka, pidä tyyli simppelinä ja käytä vihreää väriä.
+```
+
+```text
+Luo index.css .alert-error -luokka samaan tyyliin kuin .alert-success, mutta käytä punaista väriä.
+Importoi tyylit App.jsx-tiedostoon.
+```
+
+Seuraavaksi luodaan uusi Notification-komponentti:
+
+```text
+Luo Notification-komponentti components-kansioon.
+Propsit: message, type ("success" tai "error") ja onClose (callback).
+Hallitaan tilaa myöhemmin App.jsx:ssä.
+Näytä viesti ruudulla käyttäen .alert-success tai .alert-error CSS-luokkaa type:n mukaan. (CSS-luokat löytyvät src/index.css)
+Viestin tulee hävitä automaattisesti 5 sekunnin kuluttua.
+```
+
+Lisätään App.jsx-tiedostoon Notification-komponentti ja kaksi uutta tilaa:
+
+```text
+Muokkaa App.jsx:ää siten, että Notification-komponentti näyttää viestin seuraavissa tilanteissa:
+
+- Kun uusi henkilö lisätään, aseta message="Added {name}" ja type="success".
+- Kun olemassa olevan henkilön numero päivitetään, aseta message="Updated {name}'s number" ja type="success".
+- Kun henkilö poistetaan, aseta message="Deleted {name}" ja type="success".
+- Käytä handleSubmit ja handleDelete kohtia, jotta notificationMessage ja notificationType-state päivittyvät.
+- Säilytä varmistus window.confirm
+```
+
+```text
+Lisää App.jsx-tiedostoon kaksi uutta tilaa: notificationMessage (alkuarvo null) ja notificationType (alkuarvo 'success'). Tuo Notification-komponentti ja renderöi se <h2>Phonebook</h2>-otsikon alapuolelle. Välitä sille propseina message, type sekä onClose-funktio, joka asettaa notificationMessage-tilan takaisin null-arvoksi.
+```
+
+Tämän jälkeen luodaan apufunktio, jota kutsutaan kun toiminto onnistuu:
+
+```text
+Luo App.jsx-tiedostoon apufunktio showMessage(message, type = 'success'). Funktio asettaa viestin ja tyypin niille varattuihin tiloihin. Tämän jälkeen voit kutsua tätä yhtä funktiota kaikissa onnistuneissa operaatioissa.
+```
+
+Lisätään vielä viestit lisäys-, päivitys- ja poistotoimintoihin:
+
+```text
+Päivitä addPerson ja handleDelete -funktiot käyttämään showMessage-funktiota:
+
+1. Kun uusi henkilö luodaan (.create).
+
+2. Kun numero päivitetään (.updatePersonNumber).
+
+3. Kun henkilö poistetaan onnistuneesti (.deletePerson). Käytä viesteissä henkilön nimeä, esim. 'Added {name}'."
+```
+
+Lopuksi lisätään vielä virheille notifikaatiot.
+
+Avaa App.jsx ja kirjoita Copilotille:
+
+```text
+Korvaa catch-osioissa olevat alertit Notification-komponentin tilamuutoksella. Aseta tilanteeseen sopiva teksti ja muista käyttää type="error".
+```
+
+Sammuta taas JSON-serveri ja kokeile poistaa henkilö.
+
+Punaisen Notification-komponentin pitäisi nyt ilmestyä ruudulle.
+
 <h4>2.17*: puhelinluettelo step12</h4>
 
 Avaa sovelluksesi kahteen selaimeen. **Jos poistat jonkun henkilön selaimella 1** hieman ennen kuin yrität <i>muuttaa henkilön numeroa</i> selaimella 2, tapahtuu virhetilanne:
@@ -313,6 +384,32 @@ Korjaa ongelma osan 2 esimerkin [promise ja virheet](/osa2/palvelimella_olevan_d
 ![](../../images/2/28e.png)
 
 **HUOM**: Vaikka käsittelet poikkeuksen koodissa, virheilmoitus tulostuu silti konsoliin.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Meidän versiossamme olemme jo elegantisti käsitelleet mahdolliset virheet try-catch -rakenteella.
+Jos teemme tehtävänannon mukaisen virheen, saamme seuraavan Notification-komponentin ruudulle:
+
+![](../../images/2/copilot/2_17.png)
+
+tai jonkun vastaavan virheilmoituksen.
+
+Voimme kuitenkin hieman parantaa tätä.
+Huomaamme, että palautuva statuskoodi on 404, tämä tunnetusti tarkoittaa "Not found", eli kyseistä henkilöä ei ole enää JSON-serverillä.
+Sovelluksemme ei kuitenkaan päivitä persons-tilaa, vaan edelleen jo muualla poistettu henkilö näkyy sovelluksessa.
+
+Korjataan tämä kirjoittamalla Copilotille:
+
+```text
+Korjaa handleSubmit- ja handleDelete-funktiot siten, että jos serveriltä palautuu 404 (henkilöä ei löydy), sovellus:
+
+- Näyttää Notification-komponentilla virheilmoituksen, esim. `Information of ${name} has already been removed from server` tyyppi="error".
+- Päivittää persons-tilan poistamalla henkilön, joka ei enää ole serverillä.
+
+Säilytä muu toiminnallisuus täysin ennallaan.
+```
+
+Aiheuta yllä mainittu virhetilanne uudestaan, nyt jo poistetun henkilön pitäisi myös poistua ruudulta.
 
 </div>
 
@@ -600,6 +697,78 @@ Kun ehdon täyttäviä maita on enää yksi, näytetään maan perustiedot, lipp
 
 **Huom2:** Saatat törmätä ongelmiin tässä tehtävässä, jos määrittelet komponentteja "väärässä paikassa". Nyt kannattaakin ehdottomasti kerrata edellisen osan luku [älä määrittele komponenttia komponentin sisällä](/osa1/monimutkaisempi_tila_reactin_debuggaus#ala-maarittele-komponenttia-komponentin-sisalla).
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Aloitetaan ensin luomalla App-komponentti, joka sisältää filter ja countries -tilat.
+
+Avaa tyhjä App.jsx-tiedosto ja kirjoita Copilotille:
+
+```text
+Luo App-komponentti filter- ja countries-stateilla. Palauttaa tyhjän div-elementin.
+```
+
+Seuraavaksi lisätään input-kenttä maiden hakua varten:
+
+```text
+Luo input-kenttä, joka päivittää filter-tilaa. Erillinen onFilterChange-käsittelijä.
+```
+
+Tämän jälkeen luo kansio komponenteille ja tee sinne uusi Filter-komponentti. Refaktoroi juuri luotu input-kenttä Filter-komponentiksi. Jos et muista miten tämä tehtiin, palaa tehtävään 2.9.
+
+Kun olet saanut App-komponentin käyttämään Filter-komponenttia, on aika hakea maat API:sta.
+
+Avaa App.jsx ja kirjoita Copilotille:
+
+```text
+Luo useEffect-hook, joka tekee GET-pyynnön osoitteeseen d ja asettaa maat countries-taulukkoon.
+```
+
+Nyt maat haetaan API:sta ja asetetaan countries-taulukkoon, mutta taulukon sisältöä ei vielä renderöidä.
+
+Seuraavaksi haluamme heti refaktoroida ulkoisen API:n kanssa kommunikoinnin omaan tiedostoon.
+
+Luo uusi services-kansio ja sinne tiedosto countryService.js. Refaktoroi GET-pyyntö tiedostoon getAll()-funktioon ja ota se käyttöön App.jsx-tiedostossa.
+
+Jos et muista miten tämä tehdään, palaa tehtävään 2.13.
+
+Kun olet saanut tämän tehtyä, voimme tehdä filtteröinti-toiminnon valmiiksi.
+
+Kirjoita Copilotille:
+
+```text
+Filtteröi maat filter-tilan perusteella ja aseta ne countriesToShow-muuttujaan.
+```
+
+Nyt voimme renderöidä countriesToShow-taulukon, jos tuloksia on alle 10:
+
+```text
+Renderöi ehdollisesti countriesToShow, jos niitä on alle 10 kappaletta. Jos maita on yli 10 renderöi teksti "Too many matches".
+```
+
+Seuraavaksi luodaan tästä oma komponentti CountryList. Komponentti saa propsina taulukon maita (countriesToShow-muuttuja) ja tarkistaa onko maita alle 10. Ehdollisella renderöinnillä näyttää joko listan maista tai "Too many matches"-tekstin.
+
+Kun tämä on tehty, haluamme näyttää tarkempia tietoja maasta, jos tuloksia on tasan yksi:
+
+```text
+Jos countries.length on tasan 1 näytä maan nimi, pääkaupunki, pinta-ala, kielet (listana) ja lippu (country.flags.png).
+```
+
+Copilot teki nyt CountryList-komponenttiin:
+
+```jsx
+if (countries.length === 1) {
+  ... ... ...
+}
+```
+
+Haluamme eriyttää tämän heti omaan komponenttiin CountryDetails, eli refaktoroinnin jälkeen ehtolauseen sisältö pitäisi olla:
+
+```jsx
+if (countries.length === 1) {
+  return <CountryDetails country={countries[0]} >
+}
+```
+
 <h4>2.19*: maiden tiedot, step2</h4>
 
 **Tässä osassa on vielä paljon tekemistä, joten älä juutu tähän tehtävään!**
@@ -609,6 +778,38 @@ Paranna edellisen tehtävän maasovellusta siten, että kun sivulla näkyy useid
 ![](../../images/2/19b4.png)
 
 Tässäkin tehtävässä riittää, että ohjelmasi toimii suurella osalla maita ja maat, joiden nimi sisältyy johonkin muuhun maahan (kuten Sudan) voit unohtaa. 
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Lisätään ensin App-komponenttiin selectedCountry-tila:
+
+```text
+Lisää App.jsx-tiedostoon uusi tila selectedCountry (alkuarvo null).
+```
+
+Seuraavaksi lisätään 'show'-nappi maiden viereen:
+
+```text
+Päivitä CountryList-komponenttia siten, että jokaisen maan nimen viereen tulee 'show'-painike. Älä tee muuta.
+```
+
+Nyt maiden vieressä on painike, joka ei tee vielä mitään. Lisätään seuraavaksi napille handleri ja annetaan se propsina CountryList-komponentille:
+
+```text
+Lisää App.jsx-tiedostoon handleri "show"-napille ja lähetä se propsina CountryList-komponentille ja ota se napissa käyttöön. Handler asettaa maan olion selectedCountry-tilaan.
+```
+
+Seuraavaksi lisätään ehdollinen maan tietojen näyttäminen:
+
+```text
+Muuta App.jsx-renderöintiä siten, että jos selectedCountry on asetettu, näytetään vain CountryDetails-komponentti kyseiselle maalle. Tämä näkymä ohittaa tavallisen listauksen.
+```
+
+Lopuksi haluamme vielä "back"-napin CountryDetails-komponenttiin:
+
+```text
+Lisää CountryDetails-komponentin yläpuolelle 'back'-painike, joka tyhjentää selectedCountry-tilan.
+```
 
 <h4>2.20*: maiden tiedot, step3</h4>
 
@@ -642,5 +843,37 @@ Huomaa, että ympäristömuuttujan nimen täytyy alkaa merkkijonolla <i>VITE_</i
 Muista myös, että jos teet muutoksia ympäristömuuttujiin, sinun on käynnistettävä kehityspalvelin uudelleen, jotta muutokset tulevat voimaan.
 
 Tämä oli osan viimeinen tehtävä ja on aika sekä puskea koodi GitHubiin että merkitä tehdyt tehtävät [palautussovellukseen](https://studies.cs.helsinki.fi/stats/courses/fullstackopen).
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Ohjeet on luotu OpenWeatherMap-sovellusta käyttäville.
+
+Lisätään aluksi CountryDetails-komponenttiin uusi weather-tila ja noudetaan ympäristömuuttuja. Kirjoita Copilotille:
+
+```text
+Lisää CountryDetails.jsx-komponenttiin weather-tila useState-hookilla. Hae OpenWeatherMap API-avain ympäristömuuttujasta import.meta.env.VITE_WEATHER_API_KEY.
+```
+
+Seuraavaksi valmistellaan useEffect-hook CountryDetails-komponenttiin:
+
+```text
+Tee CountryDetails-komponenttiin useEffect-hook, joka suoritetaan aina, kun country-propsi muuttuu. console.logaa useEffectissä country.latlng-taulukko.
+```
+
+Seuraavaksi haluamme tehdä GET-pyynnön OpenWeatherMap-rajapintaan käyttäen koordinaatteja:
+
+```text
+Muokkaa useEffect-hookia suorittamaan GET-pyyntö OpenWeatherMap-rajapintaan käyttäen koordinaatteja. Tallenna data weather-tilaan. Käsittele mahdolliset virheet.
+```
+
+Nyt haluamme taas eriyttää API-kutsut omaan tiedostoon. Tee services-kansioon uusi weatherServices.js-tiedosto ja refaktoroi GET-pyyntö sinne.
+
+Kun olet ottanut uuden funktion käyttöön CountryDetails-komponentissa, on lopuksi vielä aika renderöidä säätiedot:
+
+```text
+Päivitä CountryDetails-komponentin renderöintiosa. Jos weather-data on ladattu, näytä otsikko 'Weather in [Capital]'. Näytä lämpötila (Celsius), tuulen nopeus (m/s) ja sääikoni.
+
+Vinkki: Sääikonin URL on muotoa https://openweathermap.org/img/wn/[icon_code]@2x.png.
+```
 
 </div>
