@@ -731,6 +731,44 @@ Sovellus pitää pystyä käynnistämään komennolla _npm start_.
 
 Komennolla _npm run dev_ käynnistettäessa sovelluksen tulee käynnistyä uudelleen, kun koodiin tehdään muutoksia.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Avaa tyhjä index.js-tiedosto ja kirjoita Copilotille:
+
+```text
+Tee Node.js Express-sovellus, joka tarjoaa osoitteessa http://localhost:3001/api/persons kovakoodatun taulukon puhelinnumerotietoja, lisää myös CORS-tuki:
+[
+  {
+    "id": "1",
+    "name": "Arto Hellas",
+    "number": "040-123456"
+  },
+  {
+    "id": "2",
+    "name": "Ada Lovelace",
+    "number": "39-44-5323523"
+  },
+  {
+    "id": "3",
+    "name": "Dan Abramov",
+    "number": "12-43-234345"
+  },
+  {
+    "id": "4",
+    "name": "Mary Poppendieck",
+    "number": "39-23-6423122"
+  }
+]
+```
+
+Navigoi selaimessa ``http://localhost:3001/api/persons``
+
+Puhelinluettelon pitäisi nyt näkyä ruudulla.
+
+Huom. nyt tarkastelemme mahdollisia backend-virheitä terminaalissa, missä käynnistimme Express-palvelimen.
+
+Testaa myös tehdä muutoksia index.js-tiedostoon ja varmista, että automaattinen uudelleenkäynnistys toimii.
+
 #### 3.2: puhelinluettelon backend step2
 
 Tee sovelluksen osoitteeseen <http://localhost:3001/info> suunnilleen seuraavanlainen sivu
@@ -739,11 +777,38 @@ Tee sovelluksen osoitteeseen <http://localhost:3001/info> suunnilleen seuraavanl
 
 Sivun tulee siis kertoa pyynnön tekohetki sekä se, kuinka monta puhelinluettelotietoa sovelluksen muistissa olevassa taulukossa on.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Lisätään sovellukseen uusi GET-reitti. Kirjoita Copilotille:
+
+```text
+Luo Express-reitti /info, joka palauttaa HTML-sivun.
+Sivulla näytetään pyyntöhetken kellonaika sekä teksti, jossa kerrotaan montako henkilöä puhelinluettelossa on (persons.length).
+Käytä new Date() ajankohdan hakemiseen.
+```
+
+Testaa toiminta selaimessa ``http://localhost:3001/info``
+
 #### 3.3: puhelinluettelon backend step3
 
 Toteuta toiminnallisuus yksittäisen puhelinnumerotiedon näyttämiseen. Esim. id:n 5 omaavan numerotiedon url on <http://localhost:3001/api/persons/5>
 
 Jos id:tä vastaavaa puhelinnumerotietoa ei ole, tulee palvelimen vastata asianmukaisella statuskoodilla.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Luodaan taas uusi GET-reitti sovellukseen:
+
+```text
+Tee Express-reitti /api/persons/:id yksittäisen henkilön hakuun id:llä.
+Jos puhelinnumeroa ei löydy, palautetaan status 404.
+```
+
+Kokeile toiminta selaimessa ``http://localhost:3001/api/persons/1``
+
+Kokeile myös 'Numeroa ei löydy'-tilanne ``http://localhost:3001/api/persons/101``
+
+Jos emme olisi palauttaneet 404 statusta, sivu olisi jäänyt ikuisesti odottamaan vastausta, koska se ei löydä henkilöä 101. Backend ei siis tiedä mitä pitää palauttaa tässä tilanteessa.
 
 #### 3.4: puhelinluettelon backend step4
 
@@ -751,11 +816,51 @@ Toteuta toiminnallisuus, jonka avulla puhelinnumerotieto on mahdollista poistaa 
 
 Testaa toiminnallisuus Postmanilla tai Visual Studio Coden REST clientillä.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Seuraavat Copilot-ohjeet ovat tarkoitettu niille, jotka käyttävät tehtävässä Visual Studio Coden REST-clienttiä.
+
+Luodaan ensin uusi DELETE-reitti:
+
+```text
+Tee express DELETE-reitti /api/persons/:id yksittäisen henkilön poistoon id:llä.
+Jos puhelinnumeroa ei löydy, palautetaan status 404.
+```
+
+Luodaan DELETE-reitin testausta varten uusi persons.rest-tiedosto:
+
+```text
+Tee uusi kansio rest ja sinne persons.rest-tiedosto. Sijoita tiedostoon DELETE-testi http://localhost:3001/api/persons/1
+```
+
+Navigoi persons.rest tiedostoon ja paina ``Send Request``.
+
+Tarkista ``http://localhost:3001/api/persons``, että henkilö id:llä 1 on poistunut.
+
+Lähetä REST-tiedostossa DELETE-pyyntö uudestaan, nyt statuksen pitäisi olla 404, koska henkilö on jo poistettu.
+
+![rest DELETE 404 response when user is already deleted'](../../images/3/copilot/3_4_rest.png)
+
 #### 3.5: puhelinluettelon backend step5
 
 Laajenna backendia siten, että uusia puhelintietoja on mahdollista lisätä osoitteeseen <http://localhost:3001/api/persons> tapahtuvalla HTTP POST ‑pyynnöllä.
 
 Generoi uuden puhelintiedon tunniste funktiolla [Math.random](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random). Käytä riittävän isoa arvoväliä, jotta arvottu id on riittävän suurella todennäköisyydellä sellainen, joka ei ole jo käytössä.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Luodaan POST-reitti index.js-tiedostoon:
+
+```text
+Tee express POST-reitti /api/persons henkilön lisäämiseksi puhelinluetteloon.
+Tee tarkistus, että lähetetty name ja number kentät ovat olemassa, jos ei - palauta status 400 virheilmoituksen kanssa.
+Generoi uniikki id käyttämällä Math.random() 1-1000000 luvut.
+Lopuksi lisää uusi henkilö persons-taulukkoon ja palauta lisätty henkilö JSON-muodossa sekä status 201.
+```
+
+Kokeile nyt itse lisätä persons.rest-tiedostoon testi POST-metodia varten.
+
+Backendin pitäisi palauttaa status 201-created sekä uuden henkilön tiedot jsonina.
 
 #### 3.6: puhelinluettelon backend step6
 
@@ -768,6 +873,19 @@ Vastaa asiaankuuluvalla statuskoodilla ja liitä vastaukseen mukaan myös tieto,
 ```js
 { error: 'name must be unique' }
 ```
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Tarkistamme jo requestin name- ja number-kentät, lisätään kuitenkin olemassa olevan nimen tarkistus:
+
+```text
+Lisää olemassa olevan nimen tarkistus POST-reittiin.
+Jos nimi on jo listassa res.status(400).json({ error: 'name must be unique' });
+```
+
+Testaa persons.rest-tiedoston POST-metodilla lisätä sama henkilö kaksi kertaa.
+
+![rest status 400 when user is already persisted in the list'](../../images/3/copilot/3_6_rest.png)
 
 </div>
 
@@ -861,6 +979,29 @@ Morganin ohjeet eivät ole ehkä kaikkein selvimmät, ja joudut kenties miettim�
 
 Morgan asennetaan kuten muutkin kirjastot, eli komennolla _npm install_ ja sen käyttöönotto tapahtuu kaikkien middlewarejen tapaan komennolla _app.use_
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Lisätään middleware:
+
+```text
+Lisää sovellukseen Morgan middleware, joka loggaa konsoliin 'tiny'-muodossa. 
+Aseta middleware ennen reittien määrittelyä.
+```
+
+Kokeile lähettää persons.rest-tiedostosta POST-pyyntö ja tarkastele terminaalia.
+
+![Terminaaliin tulostuva default 'tiny' tuloste HTTP-pyynnöistä](../../images/3/copilot/3_7_morgan.png)
+
+Yllä olevassa kuvassa nähdään järjestyksessä:
+
+* **Status-304** - Sivu on ladattu aikaisemmin, jolloin selain käyttää välimuistia (cache) ladatakseen sivun.
+
+* **Status-200** - Latasin yksittäisen henkilön tiedot id:llä 2.
+
+* **Status-404** - Henkilöä id:llä 99 ei löytynyt.
+
+* **Status-201** - Uusi henkilö lisättiin onnistuneesti (Huom. emme näe vielä body-dataa).
+
 #### 3.8*: puhelinluettelon backend step8
 
 Konfiguroi morgania siten, että se näyttää myös HTTP POST ‑pyyntöjen mukana tulevan datan:
@@ -872,5 +1013,18 @@ Tämä tehtävä on kohtuullisen haastava, vaikka koodia ei tarvitakaan paljoa.
 Tehtävän voi tehdä muutamallakin tavalla. Eräs näistä onnistuu hyödyntämällä seuraavia:
 - [creating new tokens](https://github.com/expressjs/morgan#creating-new-tokens)
 - [JSON.stringify](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify)
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Konfiguroidaan morgania luomalla Morgan-token:
+
+```text
+Luo oma Morgan-token nimeltä 'body', joka palauttaa JSON.stringify(req.body).
+Logiformaatti ':method :url :status :res[content-length] - :response-time ms :body'.
+```
+
+Testaa nyt lähettää POST-pyyntö persons.rest-tiedostosta.
+
+Terminaalitulosteen pitäisi olla nyt tehtäväselostuksen kuvan mukainen.
 
 </div>
