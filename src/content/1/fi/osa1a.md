@@ -872,6 +872,43 @@ npm run dev
 
 Kokeile vaihtaa **exercises**-lukua: päivittyykö Total automaattisesti?
 
+
+<h4>Copilot-laajennostehtävä 1</h4>
+
+Tässä laajennustehtävässä Kurssitiedot-tehtävä muunnetaan toimimaan Svelte.js-kehyksellä Copilotia hyödyntäen.
+
+Luo uusi Svelte-projekti kirjoittamalla seuraava komento terminaaliin:
+
+```bash
+npm create vite@latest kurssitiedot-svelte -- --template svelte
+```
+
+Siirry Kurssitiedot-projektin App.jsx-tiedostoon ja kirjoita Copilotille seuraava:
+
+```text
+Muunna kurssitiedot-svelte -kansio tämä Kurssitiedot-projekti toimimaan Svelte.js-kehyksellä. Laita kaikki komponentit samaan tiedostoon.
+```
+
+Kirjoita Copilotille vielä halutessasi:
+
+```text
+Poista turhat tyyli- ja komponenttitiedostot sekä kansiot, jotka eivät liity alkuperäiseen toteutukseen.
+```
+
+Jos Copilotilta jäi huomaamatta jotain tyhjiä kansioita tai turhia tiedostoja, voit halutessasi poistaa ne itse.
+
+Avaa terminaali ja siirry uuden projektin kansioon. Käynnistä kehityspalvelin seuraavalla komennolla, jos se ei vielä ole käynnissä:
+
+```bash
+npm run dev
+```
+
+Ohjelman tulisi tuottaa täsmälleen sama lopputulos selaimeen kuin Kurssitiedot-tehtävän React-versio.
+
+<h4>Copilot-laajennostehtävä 2</h4>
+
+Tee sama käyttäen Vue.js-frameworkkia.
+
 <h4>1.2: kurssitiedot, step2</h4>
 
 Refaktoroi vielä komponentti <i>Content</i> siten, että se ei itse renderöi yhdenkään osan nimeä eikä sen tehtävälukumäärää vaan ainoastaan kolme <i>Part</i>-nimistä komponenttia, joista kukin siis renderöi yhden osan nimen ja tehtävämäärän.
@@ -887,7 +924,6 @@ const Content = ... {
   )
 }
 ```
-
 
 <h4>Copilot-ohjeet tehtävälle</h4>
 
