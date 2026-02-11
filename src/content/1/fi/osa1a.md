@@ -726,7 +726,7 @@ eli Martinin mukaan pienin askelin tapahtuva huolellinen eteneminen on jopa aino
 
 **HUOM**. Muista tehtävän **jokaisen** vaiheen jälkeen testata sovelluksen toiminta selaimessa ja pidä konsoli auki.
 
-Aloitetaan pyytämällä Copilottia erottamaan osia komponenteiksi. Maalaat hiirellä osan koodia ja pyydät sitä luomaan komponentin.
+Aloitetaan pyytämällä Copilottia erottamaan koodin osia komponenteiksi. Maalaat hiirellä osan koodia ja pyydät sitä luomaan komponentin.
 
 Maalaa hiirellä:
 
@@ -734,7 +734,7 @@ Maalaa hiirellä:
 <h1>{course}</h1>
 ```
 
-ja kirjoita seuraava Copilotille, mutta varmista, että Agent-tila on päällä. Kiellämme erikseen destrukturoinnin, joka tulee myöhemmin tutuksi.
+ja kirjoita Copilotille seuraava, mutta varmista, että Agent-tila on päällä. Kiellämme erikseen destrukturoinnin, joka tulee myöhemmin tutuksi.
 
 ```text
 Erota tämä omaksi komponentiksi nimeltä Header. Pidä komponentti App.jsx-tiedostossa. Älä destrukturoi propseja.
@@ -767,7 +767,7 @@ Sitten maalaa:
 Ja kirjoita Copilotille:
 
 ```text
-Tee tästä oma komponentti Content, joka saa propseina part1,part2,part3 ja niiden exercises. Komponenttiin ei sisällytetä harjoitusten summaa.
+Tee tästä oma komponentti Content, joka saa propseina part1, part2, part3 ja niiden exercises. Komponenttiin ei sisällytetä harjoitusten summaa.
 ```
 
 Voit toki kirjoittaa promptin monella tavalla - edellä mainittu tapa estää Copilottia tekemästä asiaa turhan monimutkaisesti juuri nyt.
@@ -864,14 +864,13 @@ const App = () => {
 
 Tehtävä on mahdollista toteuttaa huomattavasti elegantimmin, mutta olennaista tässä on ymmärtää, miten dataa välitetään komponenteille ja miten isot komponentit voidaan pilkkoa pienempiin komponentteihin.
 
-Jos et käynnistänyt vielä kehityspalvelinta, kirjoita terminaaliin: 
+Jos et käynnistänyt vielä kehityspalvelinta, kirjoita terminaaliin:
 
 ```bash
 npm run dev
 ```
 
 Kokeile vaihtaa **exercises**-lukua: päivittyykö Total automaattisesti?
-
 
 <h4>Copilot-laajennostehtävä 1</h4>
 

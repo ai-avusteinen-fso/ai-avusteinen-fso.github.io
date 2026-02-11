@@ -1269,9 +1269,9 @@ Lisää itse kolmas nappi "bad" samaan tyyliin.
 ```js
 <button>bad</button>
 ```
+
 </details>
 <p>&nbsp;</p>
-
 
 Seuraavaksi lisätään nappeihin toiminnallisuutta, maalaa button-elementit ja kirjoita Copilotille:
 
@@ -1281,7 +1281,7 @@ Luo erilliset handlerit, jotka lisäävät napin klikkauksia vastaavaa statea ai
 
 Nyt napeilla on eventHandlerit, jotka on liitetty nappeihin.
 
-Lopuksi haluamme vielä renderöidä kuinka monta kertaa nappeja on painettu.
+Lopuksi haluamme vielä renderöidä, kuinka monta kertaa nappeja on painettu.
 
 Maalaa:
 
@@ -1300,7 +1300,6 @@ ja kirjoita Copilotille:
 Aseta <h2>Statistics</h2> otsikko nappien alapuolelle.
 Sen jälkeen renderöi jokaisen napin klikkausten määrä.
 ```
-
 
 <h4>1.7: unicafe step2</h4>
 
@@ -1324,13 +1323,13 @@ Luo App-komponenttiin muuttuja average, joka laskee keskiarvon kaikkien äänien
 Luo App-komponenttiin muuttuja positive, joka laskee, kuinka monta prosenttia palautteista on ollut hyviä.
 ```
 
-Seuraavaksi haluamme renderöitä uudet statistiikat:
+Seuraavaksi haluamme renderöidä uudet statistiikat:
 
 ```text
 Renderöi App-komponentissa all ja average -muuttujat.
 ```
 
-Nyt selaimessa näkyy all ja average -muuttujat, mutta positive-muuttujaa ei vielä näy.
+Nyt selaimessa näkyvät all- ja average-muuttujat, mutta positive-muuttujaa ei vielä näy.
 
 Renderöi vielä positive-muuttuja App-komponentissa.
 
@@ -1413,6 +1412,7 @@ return (
   </div>
   )
 ```
+
 Mitä tietoa haluamme Statistics-komponentille?
 
 </details>
@@ -1510,7 +1510,7 @@ Maalaa App-komponentissa button-elementit ja kirjoita Copilotille:
 Korvaa Button-komponenteilla.
 ```
 
-Nyt button-elementit on korvattu komponenteilla ja toimii edelleen kuten ennen.
+Nyt button-elementit on korvattu komponenteilla ja ne toimivat edelleen kuten ennen.
 
 Seuraavaksi luodaan StatisticLine-komponentti:
 
@@ -1643,7 +1643,7 @@ Maalaa return-lohko ja kirjoita Copilotille:
 Lisää nappi "next anecdote" anekdootin alapuolelle ja luo sille erillinen tapahtumankuuntelija, joka console.loggaa "Next anecdote clicked".
 ```
 
-Seuraavaksi haluamme, että tapahtumakuuntelija valitsee satunnaisesti uuden anekdootin:
+Seuraavaksi haluamme, että tapahtumankuuntelija valitsee satunnaisesti uuden anekdootin:
 
 ```text
 Muokkaa tapahtumankuuntelijaa siten, että se arpoo satunnaisen anekdootin taulukosta ja päivittää selected-tilan. Poista aikaisempi console.log kuuntelijasta.
@@ -1704,12 +1704,13 @@ Maalaa uusi tapahtumankuuntelija ja kirjoita Copilotille:
 ```text
 Muokkaa tapahtumankuuntelijaa niin, että se kasvattaa valitun anekdootin äänimäärää votes-tilassa yhdellä. Luo uusi taulukko kopioimalla votes, kasvata indeksin selected arvoa ja päivitä tila setVotes-funktiolla. Lisää aikaisempaan console.logiin myös äänimäärä.
 ```
+
 Tapahtumankuuntelija tulostaa nyt konsoliin valitun anekdootin sekä sen saaman äänimäärän.
 
 Lopuksi renderöimme valitun anekdootin äänimäärän näkymään:
 
 ```text
-Renderöi valitun anekdootin äänimäärä nappien yläpuolelle. Voit poistaa console.login.
+Renderöi valitun anekdootin äänimäärä nappien yläpuolelle. Poista aiempi console.log.
 ```
 
 <h4>1.14*: anekdootit step3</h4>

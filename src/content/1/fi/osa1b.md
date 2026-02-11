@@ -306,9 +306,9 @@ Käytä olioiden kenttiä: name={part1.name} ja exercises={part1.exercises} (sam
 EHDOTTOMASTI älä tee muita muutoksia.
 ```
 
-Otetaan jo tässä vaiheessa propsien _destrukturointi_ käyttöön, koska se helpottaa huomattavasti näkemään mitä propseja komponentit käyttävät.
+Otetaan jo tässä vaiheessa propsien _destrukturointi_ käyttöön, koska se helpottaa huomattavasti näkemään, mitä propseja komponentit käyttävät.
 
-Vertaa aiemmin propsit:
+Vertaa aiempaa tapaa käyttää propseja:
 
 ```js
 const Content = (props)
@@ -337,7 +337,7 @@ const Content = ({ part1, part2, part3 }) => (
 Otetaan destrukturointi käyttöön myös muissa komponenteissa:
 
 ```text
-Muokkaa Header, Total ja Part -komponentit käyttämään myös propsien destrukturointia.
+Muokkaa Header-, Total- ja Part-komponentit käyttämään myös propsien destrukturointia.
 ```
 
 Nyt kaikki komponentit käyttävät destrukturointia.
@@ -347,7 +347,7 @@ Seuraavaksi haluamme saada ohjelman toimimaan uusilla olioilla App-komponentissa
 ```text
 Korjaa App-komponentti käyttämään Content- ja Total-komponentteja niin, että:
 
-- Content saa propseina part1, part2 ja part3 olioita
+- Content saa propseina part1-, part2- ja part3-olioita
 - Total saa propseina part1.exercises + part2.exercises + part3.exercises
 ```
 
@@ -432,7 +432,7 @@ Parts-taulukon alkioihin päästään käsiksi indeksillä, jonka avulla haluttu
 
 Seuraavaksi haluamme, että App-komponentti syöttää koko parts-taulukon propsina Content-komponentille. Verrattuna aiempaan, jossa propsina annettiin part1, part2 ja part3 erikseen.
 
-Maalaa App-komponentin return-osiosta:
+Maalaa App-komponentin return-osiosta seuraava kohta:
 
 ```js
 <Content part1={part1} part2={part2} part3={part3} />
@@ -444,7 +444,7 @@ ja kirjoita Copilotille:
 Syötä Content-komponentille koko parts-taulukko propsina.
 ```
 
-Nyt Content-komponentti on toimiva uuden parts-taulukon kanssa. Lopuksi haluamme Total-komponentin toimivaksi.
+Nyt Content-komponentti toimii uuden parts-taulukon kanssa. Lopuksi haluamme Total-komponentin toimivaksi.
 
 Maalaa Total-komponentti ja kirjoita Copilotille:
 
@@ -452,7 +452,7 @@ Maalaa Total-komponentti ja kirjoita Copilotille:
 Muokkaa Total-komponentti vastaanottamaan koko parts-taulukko propsina ja valikoimaan indeksillä exercises-kentät. Älä tee vielä muuta.
 ```
 
-Nyt App-komponentin return-osiossa syötetään Total-komponentille:
+Nyt App-komponentin return-osiossa Total-komponentille syötetään:
 
 ```js
 <Total exercises1={part1.exercises} exercises2={part2.exercises} exercises3={part3.exercises} />
@@ -523,9 +523,9 @@ Header-komponentti on nyt siis toimiva ja voimme siirtyä korjaamaan Content-kom
 
 Maalaa App-komponentista:
 
- ```js
+```js
 <Content parts={parts}/>
- ```
+```
 
 ja kirjoita Copilotille:
 
