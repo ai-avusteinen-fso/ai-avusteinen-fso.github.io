@@ -485,7 +485,6 @@ describe('<Togglable />', () => {
     const element = screen.getByText('togglable content')
     expect(element).toBeVisible()
   })
-})
 ```
 
 Ennen jokaista testiä suoritettava _beforeEach_ renderöi <i>Togglable</i>-komponentin.
@@ -828,17 +827,162 @@ Sovelluksen tämänhetkinen koodi on kokonaisuudessaan [GitHubissa](https://gith
 
 Tee testi, joka varmistaa että blogin näyttävä komponentti renderöi blogin titlen ja authorin mutta ei renderöi oletusarvoisesti urlia eikä likejen määrää. Mikäli toteutit tehtävän 5.7, niin pelkkä titlen renderöinnin testaus riittää.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Kirjoitetaan yksikkötesti Blog-komponentille, joka varmistaa että oletusarvoisesti näytetään vain blogin title ja author.
+
+Avaa _Blog.test.jsx_ ja kirjoita Copilotille:
+
+```text
+Kirjoita testi Blog-komponentille:
+- Luo testidataksi blogi-objekti { title: 'Test Blog', author: 'Test Author', url: 'http://test.com', likes: 0 }
+- Renderöi <Blog blog={blogi} />
+- Varmista, että title ja author näkyvät käyttämällä screen.getByText()
+- Varmista, että url ja likes eivät näy oletuksena käyttämällä screen.queryByText() joka palauttaa null
+```
+
+Seuraavaksi tarkistetaan, että testit menevät läpi:
+
+Avaa _Blog.test.jsx_ ja kirjoita Copilotille:
+
+```text
+Päivitä testi:
+- Käytä screen.getByText(blogi.title) ja screen.getByText(blogi.author)
+- Käytä screen.queryByText(blogi.url) ja varmista että se on null: expect(screen.queryByText(blogi.url)).toBeNull()
+- Käytä screen.queryByText(blogi.likes.toString()) ja varmista että se on null: expect(screen.queryByText(blogi.likes.toString())).toBeNull()
+```
+**Huom:** Jos title/author ovat samassa elementissä muiden tekstien ja nappien kanssa getByText(title) ei löydä, etsi ensin blogin root-elementti (esim. class "blog" tai data-testid) ja käytä expect(element).toHaveTextContent(title/author).
+
+Testaa:
+
+```bash
+npm test Blog.test.jsx
+```
+
+Testaa, että:
+
+- Testi renderöi Blog-komponentin oikein
+- Title ja author näkyvät oletuksena
+- URL ja likes ovat piilossa oletuksena
+
 #### 5.14: blogilistan testit, step2
 
-Tee testi, joka varmistaa että myös url, likejen määrä ja käyttäjä näytetään, kun blogin kaikki tiedot näyttävää nappia on painettu.
+Tee testi, joka varmistaa, että myös url, likejen määrä ja käyttäjä näytetään, kun blogin kaikki tiedot näyttävää nappia on painettu.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Kirjoitetaan testi Blog-komponentille, joka varmistaa, että laajennettaessa näkyviin tulee kaikki tiedot (url, likes, käyttäjä).
+
+Avaa _Blog.test.jsx_ ja kirjoita Copilotille:
+
+```text
+Kirjoita testi Blog-komponentille:
+- Luo testidataksi blogi-objekti { title: 'Test', author: 'Author', url: 'http://test.com', likes: 5, user: { name: 'Test User' } }
+- Renderöi <Blog blog={blogi} />
+- Hae "view"-nappi screen.getByText('view') tai getByRole('button', { name: /view/i })
+- Klikkaa nappia: await user.click(button) - tähän tarvitaan userEvent.setup()
+- Varmista, että url, likes ja käyttäjän nimi näkyvät nyt
+```
+
+Varmistetaan, että klikkauksella tulevat näkyviin oikeat tiedot:
+
+Avaa _Blog.test.jsx_ ja kirjoita Copilotille:
+
+```text
+Päivitä testi:
+- Käytä const user = userEvent.setup() testin alussa
+- Klikkaa view-nappia: await user.click(button)
+- Varmista näkyvyys: expect(screen.getByText(blogi.url)).toBeInTheDocument()
+- Varmista likes: expect(screen.getByText(blogi.likes.toString())).toBeInTheDocument()
+- Varmista käyttäjä: expect(screen.getByText(blogi.user.name)).toBeInTheDocument()
+```
+
+Testaa, että:
+
+- View-nappia voidaan klikata
+- Klikkauksella näytettävät tiedot (url, likes, user) tulevat näkyviin
+- Testi varmentaa kaiken toivotussa järjestyksessä
 
 #### 5.15: blogilistan testit, step3
 
 Tee testi, joka varmistaa, että jos komponentin <i>like</i>-nappia painetaan kahdesti, komponentin propsina saamaa tapahtumankäsittelijäfunktiota kutsutaan kaksi kertaa.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Kirjoitetaan testi Blog-komponentille, joka varmistaa että like-napin klikkaus kutsuu propsissa saamaansa tapahtumankäsittelijää oikein.
+
+Avaa _Blog.test.jsx_ ja kirjoita Copilotille:
+
+```text
+Kirjoita testi Blog-komponentille:
+- Luo mock-funktio: const mockHandler = vi.fn()
+- Luo testidataksi blogi-objekti
+- Renderöi <Blog blog={blogi} onLike={mockHandler} /> (tai vastaava propsi nimellä)
+- Hae like-nappi: screen.getByText('like') tai getByRole('button', { name: /like/i })
+- Käytä userEvent.setup() ja klikkaa nappia kahdesti: await user.click(button) kahdesti
+- Varmista että mockHandler kutsuttiin kahdesti: expect(mockHandler.mock.calls).toHaveLength(2)
+```
+
+Varmistetaan että mock-funktio toimii oikein:
+
+Avaa _Blog.test.jsx_ ja kirjoita Copilotille:
+
+```text
+Päivitä testi:
+- Varmista että like-nappi on näkyvissä (jos se on piilossa oletuksena, klikkaa view-nappia ensin)
+- Käytä await user.click() molempiin klikkauksiin
+- Tarkista: expect(mockHandler.mock.calls).toHaveLength(2)
+- Vaihtoehtoisesti: expect(mockHandler).toHaveBeenCalledTimes(2)
+```
+
+Testaa, että:
+
+- Mock-funktio luodaan oikein
+- Like-nappia voidaan klikata
+- Mock-funktio kutsutaan tasan kahdesti kahdesta klikkauksesta
+- Testi epäonnistuu jos klikkausta ei ole tarpeeksi
+
 #### 5.16: blogilistan testit, step4
 
 Tee uuden blogin luomisesta huolehtivalle lomakkeelle testi, joka varmistaa, että lomake kutsuu propsina saamaansa takaisinkutsufunktiota oikeilla tiedoilla siinä vaiheessa kun blogi luodaan.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Kirjoitetaan testi BlogForm-komponentille, joka varmistaa, että lomake kutsuu callback-funktiota oikeilla arvoilla submit-nappia painettaessa.
+
+Avaa _BlogForm.test.jsx_ ja kirjoita Copilotille:
+
+```text
+Kirjoita testi BlogForm-komponentille:
+- Luo mock-callback: const mockCreate = vi.fn()
+- Renderöi <BlogForm createBlog={mockCreate} /> (tai vastaava props-nimeä mikä blogFormissa on)
+- Hae syötekentät (title, author, url) käyttämällä screen.getByPlaceholderText() tai getByLabelText()
+- Käytä userEvent.setup() ja täytä kentät: await user.type(titleInput, 'Test Title') jne.
+- Klikkaa submit-nappia: screen.getByText('create') tai getByRole('button', { name: /create/i })
+- Varmista, että mock kutsuttiin kerran ja parametri sisältää oikeat tiedot: expect(mockCreate.mock.calls[0][0]).toEqual({ title: 'Test Title', author: 'Test Author', url: 'http://test.com' })
+```
+
+Varmistetaan, että lomake toimii oikein:
+
+Avaa _BlogForm.test.jsx_ ja kirjoita Copilotille:
+
+```text
+Päivitä testi:
+- Käytä const user = userEvent.setup() testin alussa
+- Syötä arvot kaikille kentille: await user.type(input, value)
+- Klikkaa submit: await user.click(submitButton)
+- Varmista pituus: expect(mockCreate.mock.calls).toHaveLength(1)
+- Varmista sisältö: expect(mockCreate.mock.calls[0][0]).toHaveProperty('title', 'Test Title')
+- Jos lomake on Togglella piilossa, klikkaa nappia ensin
+```
+
+Testaa, että:
+
+- Mock-callback luodaan oikein
+- Kaikki syötekentät ovat täytettävissä ja löydettävissä
+- Submit-nappia voidaan klikata
+- Callback kutsutaan tasan kerran oikeilla arvoilla
+- Testi epäonnistuu, jos arvot ovat väärin
 
 </div>
 

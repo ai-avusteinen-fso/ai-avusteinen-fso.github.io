@@ -790,8 +790,8 @@ test('a note can be deleted', async () => {
 
   const notesAtEnd = await helper.notesInDb()
 
-  const ids = notesAtEnd.map(n => n.id)
-  assert(!ids.includes(noteToDelete.id))
+  const contents = notesAtEnd.map(n => n.content)
+  assert(!contents.includes(noteToDelete.content))
 
   assert.strictEqual(notesAtEnd.length, helper.initialNotes.length - 1)
 })
@@ -945,11 +945,73 @@ Huomaa, että joudut tekemään koodiin [materiaalin tapaan](/osa4/backendin_tes
 
 **HUOM:** Testien kehitysvaiheessa yleensä **<i>ei kannata suorittaa joka kerta kaikkia testejä</i>**, vaan keskittyä yhteen testiin kerrallaan. Katso lisää [täältä](/osa4/backendin_testaaminen#testien-suorittaminen-yksitellen).
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Ennen testien tekemistä täytyy määritellä testausympäristö, jotta testit eivät käytä oikean sovelluksen kanssa samaa tietokantaa. Tämä pitää sisällään .env-tiedostoon ``TEST_MONGODB_URI``-muuttujan määrittelyn, cross-env-paketin asentamisen ja sen käyttöönoton package.json-tiedostossa, config-tiedoston luomisen ja sen käyttöönoton app.js-tiedostossa. Voit katsoa ohjeet siihen [täältä](/osa4/backendin_testaaminen#test-ymparisto). Tarvittaessa voit kysyä Copilotilta apua.
+
+Tehdään ensin SuperTest-testi GET-reitille.
+
+Avaa *tests/blog_api.test.js* (tai luo se) ja kirjoita Copilotille:
+
+```text
+Luo tests/blog_api.test.js, jossa on node:test + supertest -testi GET /api/blogs -reitille. 
+Testaa:
+- status 200
+- Content-Type application/json
+- palautettujen blogien lukumäärä on initialBlogs.length
+```
+
+Seuraavaksi lisätään testien alustus ja siivous. Kirjoita Copilotille samaan tiedostoon:
+
+```text
+Lisää beforeEach, joka tyhjentää Blog-kokoelman ja lisää initialBlogs.
+Lisää after, joka sulkee mongoose-yhteyden.
+```
+
+Seuraavaksi refaktoroi route käyttämään async/awaitia. Avaa _controllers/blogs.js_ ja kirjoita Copilotille:
+
+```text
+Refaktoroi blogien GET-route käyttämään async/awaitia. 
+```
+
+Aja testit tästä eteenpäin yksitellen seuraavalla komennolla. Korvaa komentoon joko yksittäisen testin nimi tai koko describe-lohkon nimi:
+
+```bash
+npm test -- --test-name-pattern='testin nimi tähän' tests/blog_api.test.js
+```
+
+On tärkeää, että testien ja ohjelman toimivuus testataan aina uuden lisäyksen jälkeen. Muista siis ajaa testit aina jokaisen tehtävän jälkeen.
+
 #### 4.9: blogilistan testit, step2
 
 Tee testi, joka varmistaa että palautettujen blogien identifioivan kentän tulee olla nimeltään <i>id</i>. Oletusarvoisestihan tietokantaan talletettujen olioiden tunnistekenttä on <i>_id</i>. 
 
 Muuta koodia siten, että testi menee läpi. Osassa 3 käsitelty [toJSON](/osa3/tietojen_tallettaminen_mongo_db_tietokantaan#tietokantaa-kayttava-backend) on sopiva paikka parametrin <i>id</i> määrittelyyn. 
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Aloitetaan lisäämällä testi id-kentän varmistamiseksi.
+
+Avaa *tests/blog_api.test.js* ja kirjoita Copilotille:
+
+```text
+Lisää testi, joka varmistaa, että GET /api/blogs -palautteen jokaisessa blogissa on kenttä id.
+Varmista myös, että _id-kenttää ei ole.
+Käytä node:test + assert.
+```
+
+Seuraavaksi muokataan blogimallia.
+
+Avaa _models/blog.js_ ja kirjoita Copilotille:
+
+```text
+Muuta blogimallin toJSON-metodia niin, että:
+- palautetussa objektissa on id (string)
+- _id ja __v kentät poistetaan
+- muut kentät säilyvät ennallaan
+```
+
+Aja testi, voit katso mallia testin ajamiseen edellisen tehtävän lopusta tai [täältä](/osa4/backendin_testaaminen#testien-suorittaminen-yksitellen).
 
 #### 4.10: blogilistan testit, step3
 
@@ -957,17 +1019,79 @@ Tee testi, joka varmistaa, että sovellukseen voi lisätä blogeja osoitteeseen 
 
 Kun testi on valmis, refaktoroi operaatio käyttämään promisejen sijaan async/awaitia.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Luodaan ensin testi POST-reitille.
+
+Avaa *tests/blog_api.test.js* ja kirjoita Copilotille:
+
+```text
+Lisää testi, joka POST /api/blogs -pyynnöllä lisää blogin.
+Testaa, että:
+- status on 201
+- Content-Type on application/json
+- kantaan tallennettujen blogien määrä kasvaa yhdellä
+- uusi blogi (title, author, url, likes) löytyy vastauksesta
+
+Käytä node:test + assert + supertest.
+```
+
+Seuraavaksi refaktoroi POST-reitti käyttämään async/awaitia.
+
+Avaa _controllers/blogs.js_ ja kirjoita Copilotille:
+
+```text
+Refaktoroi blogien POST-route käyttämään async/awaitia.
+Palauta status 201 ja lisätty blogi.
+```
+
 #### 4.11*: blogilistan testit, step4
 
 Tee testi, joka varmistaa, että jos kentälle <i>likes</i> ei anneta arvoa, asetetaan sen arvoksi 0. Muiden kenttien sisällöstä ei tässä tehtävässä vielä välitetä.
 
 Laajenna ohjelmaa siten, että testi menee läpi.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Luodaan ensin testi likes-oletusarvolle.
+
+Avaa *tests/blog_api.test.js* ja kirjoita Copilotille:
+
+```text
+Lisää testi, joka POST /api/blogs -pyynnöllä lisää blogin ilman likes-kenttää.
+Lähetä vain title, author ja url.
+Varmista, että:
+- vastaus on 201
+- tallennetulla blogilla likes-arvo on 0
+
+Käytä node:test + assert + supertest.
+```
+
+Seuraavaksi muokkaa blogien POST-routea niin, että jos likes puuttuu, se asetetaan nollaksi. Tee muutos itse ja testaa muutoksen toimivuus.
+
 #### 4.12*: blogilistan testit, step5
 
 Tee testit blogin lisäämiselle eli osoitteeseen <i>/api/blogs</i> tapahtuvalle HTTP POST ‑pyynnölle jotka varmistavat, että jos uusi blogi ei sisällä kenttää <i>title</i> tai kenttää <i>url</i>, pyyntöön vastataan statuskoodilla <i>400 Bad Request</i>.
 
 Laajenna toteutusta siten, että testit menevät läpi.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Luodaan ensin testit validointia varten.
+
+Avaa *tests/blog_api.test.js* ja kirjoita Copilotille:
+
+```text
+Lisää kaksi testiä:
+1. POST /api/blogs ilman title-kenttää (lähetä vain author, url, likes)
+   - odotetaan status 400
+2. POST /api/blogs ilman url-kenttää (lähetä vain title, author, likes)
+   - odotetaan status 400
+
+Käytä node:test + assert + supertest.
+```
+
+Validointi pitää lisätä nyt blogien POST-routeen. Varmista, että jos title- tai url-kenttä puuttuu, route palauttaa statuskoodin 400.
 
 </div>
 
@@ -1082,8 +1206,8 @@ describe('when there is initially some notes saved', () => {
 
       const notesAtEnd = await helper.notesInDb()
 
-      const ids = notesAtEnd.map(n => n.id)
-      assert(!ids.includes(noteToDelete.id))
+      const contents = notesAtEnd.map(n => n.content)
+      assert(!contents.includes(noteToDelete.content))
 
       assert.strictEqual(notesAtEnd.length, helper.initialNotes.length - 1)
     })
@@ -1119,6 +1243,36 @@ Käytä async/awaitia. Noudata operaation HTTP-rajapinnan suhteen [RESTful](/osa
 
 Toteuta ominaisuudelle myös testit.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Aloitetaan toteuttamalla DELETE-route.
+
+Avaa _controllers/blogs.js_ ja kirjoita Copilotille:
+
+```text
+Toteuta DELETE-route polkuun /api/blogs/:id.
+Käytä async/awaitia ja Mongoose-metodia findByIdAndDelete.
+Poista blogi id:n perusteella.
+Palauta status 204.
+Noudata RESTful-käytänteitä.
+```
+
+Seuraavaksi tehdään testi poisto-operaatiolle.
+
+Avaa *tests/blog_api.test.js* ja kirjoita Copilotille:
+
+```text
+Lisää testi, joka DELETE /api/blogs/:id -pyynnöllä poistaa blogin.
+Hae ensin blogsInDb():llä alkutila ja valitse poistettava blogi.
+Tee DELETE-pyyntö.
+Tarkista, että:
+- status on 204
+- blogien määrä vähenee yhdellä
+- poistettu blogi ei enää löydy helper.blogsInDb():n tuloksesta
+
+Käytä node:test + assert + supertest.
+```
+
 #### 4.14* blogilistan laajennus, step2
 
 Toteuta sovellukseen mahdollisuus yksittäisen blogin muokkaamiseen.
@@ -1128,5 +1282,36 @@ Käytä async/awaitia.
 Tarvitsemme muokkausta lähinnä <i>likejen</i> lukumäärän päivittämiseen. Toiminnallisuuden voi toteuttaa samaan tapaan kuin muistiinpanon päivittäminen toteutettiin [osassa 3](/osa3/tietojen_tallettaminen_mongo_db_tietokantaan#muut-operaatiot).
 
 Toteuta ominaisuudelle myös testit.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Aloitetaan toteuttamalla PUT-route.
+
+Avaa _controllers/blogs.js_ ja kirjoita Copilotille:
+
+```text
+Toteuta PUT-route polkuun /api/blogs/:id.
+Käytä async/awaitia ja Mongoose-metodia findByIdAndUpdate.
+Aseta { new: true } optio, jotta saat päivitetyn blogin takaisin.
+Palauta päivitetty blogi JSON-muodossa.
+Noudata RESTful-käytänteitä.
+```
+
+Seuraavaksi tehdään testi päivitys-operaatiolle.
+
+Avaa *tests/blog_api.test.js* ja kirjoita Copilotille:
+
+```text
+Lisää testi, joka PUT /api/blogs/:id -pyynnöllä päivittää blogin likes-kentän.
+Hae ensin blogsInDb():llä alkutila ja valitse päivitettävä blogi.
+Tee PUT-pyyntö uudella likes-arvolla.
+Tarkista, että:
+- status on 200
+- vastauksen likes on päivittynyt
+- helper.blogsInDb():stä haettu blogi sisältää uuden likes-arvon
+- muut kentät (title, author, url) säilyvät muuttumattomina
+
+Käytä node:test + assert + supertest.
+```
 
 </div>

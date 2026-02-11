@@ -523,11 +523,79 @@ Klikkaamalla nappia <i>create new blog</i> lomake aukeaa:
 
 Lomakkeen tulee sulkeutua, kun <i>cancel</i>-painiketta painetaan tai kun uusi blogi luodaan.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Toteutetaan Togglable-komponentti, jonka avulla voi näyttää ja piilottaa blogin luomislomakkeen.
+
+Luo Togglable-komponentti. Kirjoita Copilotille:
+
+```text
+Luo Togglable-komponentti:
+- Propsit: buttonLabel (merkkijono), children (sisältö)
+- useState(false) näkyvyydelle (visible)
+- Renderöi nappi, joka togglaa näkyvyyttä
+- Näytä children vain kun visible === true (käytä display:none tai ehdollista renderöintiä)
+- Lisää cancel-nappi (näkyy vain kun visible === true)
+```
+
+Lisää imperative handle ja ref-tuki Togglable-komponenttiin.
+
+Avaa _Togglable.jsx_-tiedosto ja kirjoita Copilotille:
+
+```text
+Lisää forwardRef ja useImperativeHandle:
+- Ota käyttöön forwardRef: const Togglable = forwardRef((props, ref) => { }) 
+- Exporttaa toggleVisibility()-funktion useImperativeHandle:n kautta
+- Mahdollistaa formRef.current.toggleVisibility() kutsun ulkopuolelta
+```
+
+Avaa _App.jsx_-tiedosto ja kirjoita Copilotille:
+
+```text
+Lisää useRef ja kiinnitä se Togglablelle:
+- Luo viite komponentin ulkopuolella: const formRef = useRef()
+- Välitä ref Togglablelle: <Togglable ref={formRef}>
+- Voit sulkea lomakkeen ulkopuolelta kutsumalla: formRef.current.toggleVisibility()
+```
+
+Ota Togglable-komponentti käyttöön. Tee tämä muutos itse.
+
+Testaa, että:
+
+- "Create new blog" -nappi näkyy oletusarvoisesti
+- Nappia klikkaamalla lomake aukeaa
+- Cancel-nappia klikkaamalla lomake sulkeutuu
+- Onnistuneen blogin lisäyksen jälkeen lomake sulkeutuu automaattisesti
+
 #### 5.6 blogilistan frontend, step6
 
 Eriytä uuden blogin luomisesta huolehtiva lomake omaan komponenttiinsa (jos et jo ole niin tehnyt), ja siirrä kaikki uuden blogin luomiseen liittyvä tila komponentin vastuulle. 
 
 Komponentin tulee siis toimia samaan tapaan kuin tämän osan [materiaalin](https://fullstack-hy2020.github.io/osa5/props_children_ja_proptypet#lomakkeiden-tila) komponentin <i>NoteForm</i>.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Eriytä blogin luomisen lomake omaksi komponentiksi, joka hallinnoi oman tilansa.
+
+Luo BlogForm-komponentti. Kirjoita Copilotille:
+
+```text
+Luo BlogForm-komponentti:
+- useState-tilat: title, author, url
+- Kolme input-kenttää (title, author, url) ja submit-nappi
+- handleSubmit: kutsuu props.onSubmit({ title, author, url })
+- Tyhjentää kentät onnistuneen submitin jälkeen: setTitle(''), setAuthor(''), setUrl('')
+- Propsit: onSubmit (callback App-komponenttiin)
+```
+
+Siirrä tilat BlogForm-komponenttiin. Tee tämä muutos itse.
+
+Testaa, että:
+
+- Lomakkeella voi syöttää title, author, url
+- Submit kutsuu addBlog-funktiota oikealla datalla
+- Kentät tyhjenevät blogin luonnin jälkeen
+- Uusi blogi näkyy listalla
 
 #### 5.7 blogilistan frontend, step7
 
@@ -567,6 +635,32 @@ const Blog = ({ blog }) => {
 
 **Huom:** Vaikka tämän tehtävän toiminnallisuus on melkein samanlainen kuin komponentin <i>Togglable</i> tarjoama toiminnallisuus, ei Togglable kuitenkaan sovi tarkoitukseen sellaisenaan. Helpoin ratkaisu lienee lisätä blogille tila, joka kontrolloi sitä missä muodossa blogi näytetään.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Toteutetaan Blog-komponenttiin laajennus/suppeutus näkymä.
+
+Lisää laajennus-tila Blog-komponenttiin.
+
+Avaa _Blog.jsx_-tiedosto ja kirjoita Copilotille:
+
+```text
+Päivitä Blog-komponentti:
+- useState(false) expanded-tilalle
+- Collapsed näkymä: näytä title, author ja "view"-nappi
+- Expanded näkymä: näytä title, author, url, likes, "like"-nappi (ei toiminnallisuutta vielä), username, "hide"-nappi
+- View-nappi: togglei expanded-tilaa (onClick)
+- Hide-nappi: togglei expanded-tilaa
+```
+
+Lisää tyylit Blog-komponentille. Tee tämä itse.
+
+Testaa, että:
+
+- Oletusarvoisesti näkyy vain title, author ja "view"-nappi
+- "View"-nappia klikkaamalla blogin kaikki tiedot näkyvät
+- "Hide"-nappia klikkaamalla näkyy vain title ja author
+- "Like"-nappi näkyy mutta ei tee mitään
+
 #### 5.8: blogilistan frontend, step8
 
 Toteuta like-painikkeen toiminnallisuus. Like lisätään backendiin blogin yksilöivään urliin tapahtuvalla _PUT_-pyynnöllä.
@@ -600,6 +694,47 @@ tulee palvelimelle tehdä PUT-pyyntö osoitteeseen <i>/api/blogs/5a43fde2cbd20b1
 }
 ```
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Toteutetaan like-painikkeen toiminnallisuus. Like lähetetään backendiin PUT-pyynnöllä.
+
+Lisää update-funktio. Avaa _services/blogs.js_-tiedosto ja kirjoita Copilotille:
+
+```text
+Lisää update-funktio:
+- update(id, updatedBlog): axios.put('/api/blogs/{id}', updatedBlog)
+- updatedBlog sisältää kaikki kentät: title, author, url, likes, user (user._id merkkijono)
+- Palauta response.data
+Varmista Authorization-header asetetaan (blogService.setToken)
+```
+
+Toteutetaan like-napin toiminnallisuus Blog-komponentissa:
+
+Avaa _Blog.jsx_-tiedosto ja kirjoita Copilotille:
+
+```text
+Like-nappi:
+- handleLike-funktio kutsuu props.onLike({ ...blog, likes: blog.likes + 1 })
+- Päivitä App.jsx:n blogilista
+```
+
+Lisää updateBlog-funktio _App.jsx_:iin:
+
+Avaa _App.jsx_-tiedosto ja kirjoita Copilotille:
+
+```text
+Lisää updateBlog-funktio App.jsx:iin:
+- updateBlog(id, updatedBlog): kutsuu blogService.update(id, updatedBlog)
+- Päivittää blogilista: setBlogs(blogs.map(b => b.id === id ? updatedBlog : b))
+- Välitä Blog-komponentille propsina: onLike={updateBlog}
+```
+
+Testaa, että:
+
+- Like-nappia klikkaamalla likejen määrä kasvaa
+- Selaimen reload säilyttää like-arvon
+- Like-tieto tallentuu tietokantaan
+
 #### 5.9*: blogilistan frontend, step9
 
 Huomaamme, että jotain on pielessä. Kun blogia liketetään, ei blogin lisääjän nimeä näytetä enää blogin tarkempien tietojen joukossa:
@@ -610,9 +745,45 @@ Kun selain uudelleenladataan, lisääjän tieto tulee näkyviin. Tämä ei ole h
 
 On toki mahdollista, että olet jo tehnyt kaiken oikein, ja ongelmaa ei koodissasi ilmene. Tässä tapauksessa voit siirtyä eteenpäin.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Korjataan ongelma, jossa username katoaa likejen jälkeen.
+
+Avaa _App.jsx_-tiedosto ja kirjoita Copilotille:
+
+```text
+Korjaa updateBlog:
+- Kun blogia liketetään, yhdistä palvelimen palauttaman blogin kanssa vanhan blogin user-data
+- const merged = { ...updatedBlog, user: blog.user }
+- Tai: kutsua blogService.getAll() likettämisen jälkeen, jotta saisit kaikki blogit fresh populate-datalla
+- Välitä merged blogi setBlogs:lle
+```
+
+Testaa, että:
+
+- username pysyy näkyvillä laajennetussa näkymässä
+- Selaimen reload säilyttää user-tiedot
+
 #### 5.10: blogilistan frontend, step10
 
 Järjestä sovellus näyttämään blogit <i>likejen</i> mukaisessa suuruusjärjestyksessä. Järjestäminen onnistuu taulukon metodilla [sort](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort).
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Järjestetään blogit likejen mukaisesti laskevassa järjestyksessä.
+
+Avaa _App.jsx_-tiedosto ja kirjoita Copilotille:
+
+```text
+Järjestä blogit likejen perusteella laskevaan järjestykseen:
+- Renderöinnissä: [...blogs].sort((a, b) => b.likes - a.likes).map(blog => ...)
+- Käytä spread-operaattoria [...blogs] jotta alkuperäinen lista ei muutu
+```
+
+Testaa, että:
+
+- Blogit näytetään likejen perusteella laskevassa järjestyksessä
+- Like-nappia klikkaamalla lista järjestyy uudelleen automaattisesti
 
 #### 5.11: blogilistan frontend, step11
 
@@ -625,6 +796,41 @@ Ohjelmasi voi näyttää esim. seuraavalta:
 Kuvassa näkyvä poiston varmistus on helppo toteuttaa funktiolla [window.confirm](https://developer.mozilla.org/en-US/docs/Web/API/Window/confirm).
 
 Näytä poistonappi ainoastaan jos kyseessä on kirjautuneen käyttäjän lisäämä blogi.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Toteutetaan blogin poisto-toiminnallisuus. Delete-nappi näkyy vain kirjautuneen käyttäjän omille blogeille.
+
+Avaa _services/blogs.js_ ja kirjoita Copilotille:
+
+```text
+Lisää remove-funktio:
+- remove(id): axios.delete('/api/blogs/{id}')
+- Käytä Authorization-headeria (blogService.setToken)
+- Palauta response.data
+```
+
+Lisää delete-nappi Blog-komponentissa, joka näkyy vain omilla blogeilla. Tee tämä muutos itse.
+
+Toteutetaan deleteBlog App.jsx:ssa:
+
+Avaa _App.jsx_ ja kirjoita Copilotille:
+
+```text
+Lisää deleteBlog-funktio App.jsx:iin:
+- deleteBlog(id): kutsuu blogService.remove(id)
+- Varmista poisto window.confirm:lla ennen kutsua
+- Päivittää blogilista: setBlogs(blogs.filter(b => b.id !== id))
+- Välitä Blog-komponentille propsina: onDelete={deleteBlog}
+- Käsittele mahdolliset virheet try/catch:lla
+```
+
+Testaa, että:
+- Delete-nappi näkyy vain omilla blogeilla (kirjautuneen käyttäjän luomilla)
+- Delete-nappi ei näy muiden käyttäjien blogeilla
+- Delete-nappia klikkaamalla avautuu vahvistusdialogi
+- Vahvistuksen jälkeen blogi poistuu listalta
+- Selaimen reload vahvistaa poiston (blogi ei palaa)
 
 </div>
 
@@ -715,5 +921,62 @@ Sovelluksen tämänhetkinen koodi on kokonaisuudessaan [GitHubissa](https://gith
 Ota projektiin käyttöön ESLint. Määrittele haluamasi kaltainen konfiguraatio. Korjaa kaikki lint-virheet.
 
 Vite on asentanut projektille ESLintin valmiiksi, joten ei tarvita muuta kun sopiva konfiguraatio tiedostoon <i>eslint.config.js</i>.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Otetaan ESLint käyttöön projektissa ja korjataan kaikki lint-virheet.
+
+Päivitä ESLint-konfiguraatio:
+
+Avaa _eslint.config.js_ ja kirjoita Copilotille:
+
+```text
+Päivitä eslint.config.js kurssin ohjeiden mukaisesti:
+- Lisää rules seuraavasti:
+  - indent: ['error', 2]
+  - 'linebreak-style': ['error', 'unix']
+  - quotes: ['error', 'single']
+  - semi: ['error', 'never']
+  - eqeqeq: 'error'
+  - 'no-trailing-spaces': 'error'
+  - 'object-curly-spacing': ['error', 'always']
+  - 'arrow-spacing': ['error', { before: true, after: true }]
+  - 'no-console': 'off'
+```
+
+Aja ESLint ja korjaa virheet:
+
+Avaa terminaali ja kirjoita:
+
+```bash
+npm run lint
+```
+
+Varmista ja korjaa:
+
+Kirjoita Copilotille:
+
+```text
+Korjaa kaikki eslint-virheet:
+- Poista turhat välilyönnit
+- Yhdenmukaista quotes (käytä single quotes)
+- Poista turha semicolon (ei semicolon:ia)
+- Muuta == === -operaattoriksi
+- Muista arrow-function spacing: ( ) =>
+Aja npm run lint uudelleen, kunnes 0 virhettä
+```
+
+Tarkista lopputulos:
+```bash
+npm run lint -- --fix
+```
+```bash
+npm run lint
+```
+
+Varmista, että:
+- npm run lint ei näytä virheitä
+- Kaikki tiedostot noudattavat ESLint-konfiguraatiota
+
 
 </div>

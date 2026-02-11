@@ -150,9 +150,37 @@ Voit näyttää frontendissa käyttäjälle Mongoosen validoinnin oletusarvoisen
 
 ![Selain renderöi virheilmoituksen 'Person valiation failed: name...'](../../images/3/56e.png)
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Avaa ensin backendin _person.js_-tiedosto.
+
+Lisätään tänne backend-validointi Mongoosen avulla.
+
+Kirjoita Copilotille:
+
+```text
+Backendin person.js-tiedostossa validoi personSchema name-kenttä type: String, minlength: 3.
+Lisää myös 'ValidationError' keskitettyyn virheidenkäsittelijään errorHandler.js, ja palauta status 400 + json { error: error.message }.
+```
+
+Seuraavaksi siirrytään frontendiin koppaamaan virhe ja esittämään se käyttäjälle.
+
+Avaa App.jsx tiedosto ja kirjoita Copilotille:
+
+```text
+Muokkaa App.jsx:ää niin, että jos backend palauttaa virheen (HTTP 400) henkilöä lisättäessä, 
+virhe näytetään Notification-komponentissa.
+Ota virheilmoitus axios-virheestä (error.response.data.error)
+```
+
+Testaa nyt lisätä selaimessa nimi, joka on alle kolme merkkiä pitkä. Syötä samalla jokin numero (esim. 123), jotta validointi menee Mongoose minlength-sääntöön eikä kaadu puuttuvaan number-kenttään.
+
+Ruudulle pitäisi ilmestyä punainen Notification-komponentti, joka sisältää Mongoosen oletusarvoisen validointivirheilmoituksen.
+
 #### 3.20*: puhelinluettelo ja tietokanta, step8
 
 Toteuta sovelluksellesi validaatio, joka huolehtii, että backendiin voi tallettaa ainoastaan oikeassa muodossa olevia puhelinnumeroita. Puhelinnumeron täytyy olla
+
 - vähintään 8 merkkiä pitkä
 - koostua kahdesta väliviivalla erotetusta osasta joissa ensimmäisessä osassa on 2 tai 3 numeroa ja toisessa osassa riittävä määrä numeroita
   - esim. 09-1234556 ja 040-22334455 ovat oikeassa muodossa
@@ -161,6 +189,38 @@ Toteuta sovelluksellesi validaatio, joka huolehtii, että backendiin voi tallett
 Toteuta validoinnin toinen osa [Custom validationina](https://mongoosejs.com/docs/validation.html#custom-validators).
 
 Jos HTTP POST ‑pyyntö yrittää lisätä virheellistä numeroa, tulee vastata sopivalla statuskoodilla ja lisätä vastaukseen asianmukainen virheilmoitus.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Avaa backendin person.js -tiedosto ja kirjoita Copilotille:
+
+```text
+Päivitä models/person.js seuraavasti:
+
+1. Lisää Person-skeeman number-kenttään validate-ominaisuus.
+2. validate sisältää validator-funktion sekä kustomoidun message-viestin.
+```
+
+Person-skeeman number-kentässä on nyt valmiina custom-validoinnin perusrakenne.
+
+Toteutetaan puhelinnumeron haluttu validointilogiikka:
+
+```text
+Päivitä validator-funktio siten, että se tarkistaa samassa funktiossa:
+
+- merkkijonon kokonaispituus on vähintään 8 merkkiä
+- arvo on muotoa XX-XXXXX (kaksi osaa väliviivalla erotettuna)
+- ensimmäisessä osassa on 2 tai 3 numeroa
+- toisessa osassa on vain numeroita
+
+Huom: Älä käytä Mongoosen minlength-ominaisuutta, vaan sisällytä pituustarkistus tähän custom-validointiin.
+
+Toteuta muodon tarkistaminen säännöllisillä lausekkeilla (Regex).
+```
+
+Nyt, jos kokeilemme frontendissä lisätä liian lyhyen/väärässä muodossa olevan puhelinnumeron, saamme siitä korrektin virheilmoituksen ruudulle.
+
+Varmista myös, että oikeaoppisen numeron lisääminen onnistuu.
 
 #### 3.21 tietokantaa käyttävä versio Internetiin
 

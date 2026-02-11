@@ -608,7 +608,7 @@ Sivun latauksen yhteydessä lähetimme GET-pyynnön osoitteeseen http://localhos
 
 ![](../../images/2/copilot/2_11_get_req.png)
 
-Viereiseltä Response-tabilta näemme, mitä olemme saaneet paluupostina.
+Viereiseltä Response-välilehdeltä näemme, mitä olemme saaneet vastauksena.
 
 ![](../../images/2/copilot/2_11_response.png)
 

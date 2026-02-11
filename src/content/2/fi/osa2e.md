@@ -309,11 +309,11 @@ Luo ensin tyhjä index.css-tiedosto src-kansioon.
 Kirjoitetaan nyt ensimmäiset CSS-luokat. Avaa tiedosto ja kirjoita Copilotille:
 
 ```text
-Määrittele index.css .alert-success -luokka, pidä tyyli simppelinä ja käytä vihreää väriä.
+Määrittele index.css-tiedostoon .alert-success -luokka, pidä tyyli simppelinä ja käytä vihreää väriä.
 ```
 
 ```text
-Luo index.css .alert-error -luokka samaan tyyliin kuin .alert-success, mutta käytä punaista väriä.
+Määrittele index.css-tiedostoon .alert-error -luokka samaan tyyliin kuin .alert-success, mutta käytä punaista väriä.
 Importoi tyylit App.jsx-tiedostoon.
 ```
 
@@ -322,7 +322,7 @@ Seuraavaksi luodaan uusi Notification-komponentti:
 ```text
 Luo Notification-komponentti components-kansioon.
 Propsit: message, type ("success" tai "error") ja onClose (callback).
-Hallitaan tilaa myöhemmin App.jsx:ssä.
+Hallitaan tilaa myöhemmin App.jsx-tiedostossa.
 Näytä viesti ruudulla käyttäen .alert-success tai .alert-error CSS-luokkaa type:n mukaan. (CSS-luokat löytyvät src/index.css)
 Viestin tulee hävitä automaattisesti 5 sekunnin kuluttua.
 ```
@@ -343,7 +343,7 @@ Muokkaa App.jsx:ää siten, että Notification-komponentti näyttää viestin se
 Lisää App.jsx-tiedostoon kaksi uutta tilaa: notificationMessage (alkuarvo null) ja notificationType (alkuarvo 'success'). Tuo Notification-komponentti ja renderöi se <h2>Phonebook</h2>-otsikon alapuolelle. Välitä sille propseina message, type sekä onClose-funktio, joka asettaa notificationMessage-tilan takaisin null-arvoksi.
 ```
 
-Tämän jälkeen luodaan apufunktio, jota kutsutaan kun toiminto onnistuu:
+Tämän jälkeen luodaan apufunktio, jota kutsutaan, kun toiminto onnistuu:
 
 ```text
 Luo App.jsx-tiedostoon apufunktio showMessage(message, type = 'success'). Funktio asettaa viestin ja tyypin niille varattuihin tiloihin. Tämän jälkeen voit kutsua tätä yhtä funktiota kaikissa onnistuneissa operaatioissa.
@@ -352,18 +352,18 @@ Luo App.jsx-tiedostoon apufunktio showMessage(message, type = 'success'). Funkti
 Lisätään vielä viestit lisäys-, päivitys- ja poistotoimintoihin:
 
 ```text
-Päivitä addPerson ja handleDelete -funktiot käyttämään showMessage-funktiota:
+Päivitä addPerson- ja handleDelete-funktiot käyttämään showMessage-funktiota:
 
 1. Kun uusi henkilö luodaan (.create).
 
 2. Kun numero päivitetään (.updatePersonNumber).
 
-3. Kun henkilö poistetaan onnistuneesti (.deletePerson). Käytä viesteissä henkilön nimeä, esim. 'Added {name}'."
+3. Kun henkilö poistetaan onnistuneesti (.deletePerson). Käytä viesteissä henkilön nimeä, esim. 'Added {name}'.
 ```
 
 Lopuksi lisätään vielä virheille notifikaatiot.
 
-Avaa App.jsx ja kirjoita Copilotille:
+Avaa App.jsx-tiedosto ja kirjoita Copilotille:
 
 ```text
 Korvaa catch-osioissa olevat alertit Notification-komponentin tilamuutoksella. Aseta tilanteeseen sopiva teksti ja muista käyttää type="error".
@@ -409,7 +409,7 @@ Korjaa handleSubmit- ja handleDelete-funktiot siten, että jos serveriltä palau
 Säilytä muu toiminnallisuus täysin ennallaan.
 ```
 
-Aiheuta yllä mainittu virhetilanne uudestaan, nyt jo poistetun henkilön pitäisi myös poistua ruudulta.
+Aiheuta yllä mainittu virhetilanne uudestaan. Nyt jo poistetun henkilön pitäisi myös poistua ruudulta.
 
 </div>
 
@@ -755,7 +755,7 @@ Jos countries.length on tasan 1 näytä maan nimi, pääkaupunki, pinta-ala, kie
 
 Copilot teki nyt CountryList-komponenttiin:
 
-```jsx
+```js
 if (countries.length === 1) {
   ... ... ...
 }
@@ -763,7 +763,7 @@ if (countries.length === 1) {
 
 Haluamme eriyttää tämän heti omaan komponenttiin CountryDetails, eli refaktoroinnin jälkeen ehtolauseen sisältö pitäisi olla:
 
-```jsx
+```js
 if (countries.length === 1) {
   return <CountryDetails country={countries[0]} >
 }
@@ -808,7 +808,7 @@ Muuta App.jsx-renderöintiä siten, että jos selectedCountry on asetettu, näyt
 Lopuksi haluamme vielä "back"-napin CountryDetails-komponenttiin:
 
 ```text
-Lisää CountryDetails-komponentin yläpuolelle 'back'-painike, joka tyhjentää selectedCountry-tilan.
+Lisää CountryDetails-komponentin yläpuolelle "back"-painike, joka tyhjentää selectedCountry-tilan.
 ```
 
 <h4>2.20*: maiden tiedot, step3</h4>

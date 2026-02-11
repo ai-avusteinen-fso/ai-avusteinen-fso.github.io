@@ -346,6 +346,60 @@ Person
 
 **HUOM:** Jos määrittelet modelin nimeksi <i>Person</i>, muuttaa Mongoose sen monikkomuotoon <i>people</i>, jota se käyttää vastaavan kokoelman nimenä.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+**Huom:** Jos MongoDB Atlaksen käyttöönotto tai connection stringin hakeminen ei ole muistissa, kertaa tarvittaessa kohdan [MongoDB](/osa3/tietojen_tallettaminen_mongo_db_tietokantaan#mongo-db) ohjeet.
+
+Aloitetaan luomalla mongo.js-tiedosto:
+
+```text
+Luo mongo.js-tiedosto projektin juureen ja asenna mongoose.
+Lue salasana komentoriviltä (process.argv[2]). Jos se puuttuu, tulosta virheilmoitus ja lopeta.
+```
+
+Tehtävän kansiossa pitäisi nyt näkyä mongo.js-tiedosto ja mongoose-kirjaston tulisi olla asennettuna projektiin. Salasana on tässä vaiheessa tallennettu muuttujaan.
+
+Seuraavaksi pyydetään Copilottia luomaan MongoDB-yhteys sekä Person-malli:
+
+```text
+Muodosta yhteys MongoDB Atlas -tietokantaasi käyttämällä salasanaa yhteysmerkkijonossa. URL-osoitteen db_user, db_name, cluster ja appName tulevat kovakoodatusti
+Määrittele Person-skeema ja -malli (kentät: name ja number).
+```
+
+Täytä koodissa _dbUser_, _dbName_, _cluster_ ja _appName_ muuttujiin omat tunnuksesi.
+
+Muuttuja _dbName_ voi olla mikä tahansa, esim. _phonebook_, jos kyseisen nimistä tietokantaa ei löydy klusterista, se luodaan automaattisesti.
+
+Lisätään seuraavaksi tiedostoon logiikka puhelinnumeron tallentamista varten:
+
+```text
+Lisää logiikka, joka tarkistaa, onko komentoriviparametreja yhteensä 5 (node, tiedosto, salasana, nimi, numero). Jos on, luo uusi Person-olio näillä tiedoilla, tallenna se tietokantaan ja tulosta viesti: 'added [nimi] number [numero] to phonebook'. Sulje lopuksi yhteys.
+```
+
+Ja lopuksi lisätään vielä mahdollisuus hakea kaikki numerot tietokannasta:
+
+```text
+Lisää logiikka tilanteeseen, jossa komentoriviparametreja on vain 3 (vain salasana annettu). Tällöin ohjelman tulee hakea kaikki henkilöt tietokannasta ja tulostaa ne muodossa: 'phonebook:' '[nimi] [numero]' Muista sulkea tietokantayhteys haun jälkeen.
+```
+
+Testaa _mongo.js_ tiedoston toiminta ajamalla se komentorivillä komennolla (Huom. Täytä oma salasana):
+
+``node mongo.js tähän_sinun_salasanasi "Arto Vihavainen" 040-1234556``
+
+Käy katsomassa MongoDB Atlas -palvelusta, onko sinne ilmestynyt phonebook-tietokanta ja people-kokoelma.
+
+**Huom:** Jos määrittelit modelin nimeksi Person, Mongoose luo kokoelman nimellä people.
+
+Seuraavaksi kokeile vielä hakea henkilöt tietokannasta komennolla:
+
+``node mongo.js tähän_sinun_salasanasi``
+
+Konsoliin pitäisi palautua juuri lisätty _Arto Vihavainen_ ja hänen puhelinnumeronsa.
+
+Muistutuksena vielä tässä vaiheessa:
+
+**Älä missään nimessä tallenna salasanaasi muistiin keskellä koodia**
+
 </div>
 
 <div class="content">
@@ -650,11 +704,106 @@ Varmista, että frontend toimii muutosten jälkeen.
 
 Tee tässä ja seuraavissa tehtävissä Mongoose-spesifinen koodi omaan moduuliinsa samaan tapaan kuin kohdassa [Tietokantamäärittelyjen eriyttäminen moduuliksi](/osa3/tietojen_tallettaminen_mongo_db_tietokantaan#tietokantamaarittelyjen-eriyttaminen-moduuliksi).
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Luo tässä vaiheessa backendin juureen _.env_-tiedosto ja lisää sinne muuttujat MONGODB_URI ja PORT:
+
+```js
+MONGODB_URI=mongodb+srv://SINUN_KÄYTTÄJÄNIMI:SINUN_SALASANA@SINUN_HOST_NIMI/SINUN_TIETOKANNAN_NIMI?retryWrites=true&w=majority&appName=SINUN_CLUSTER
+
+PORT=3001
+```
+
+Voit tarkistaa URL:iin kuuluvat osat oman Clusterisi connection stringistä.
+
+Parametrit URLissa, jotka eivät ole itsestäänselviä:
+
+_retryWrites=true_ - Yrittää automaattisesti uudelleen epäonnistuneita kirjoituksia, esim. jos tapahtuu lyhyt verkkokatko.
+
+_w=majority_ - Käytännössä ylimääräinen kehitysympäristössä, mutta tuotantoympäristössä suositeltava - vähentää datan katoamisen riskiä solmun kaatuessa.
+
+_appName_ - Nimeää sovelluksen Atlas-lokeihin, vain informatiivinen.
+
+**HUOM:** Atlasin connection stringissä <i>appName</i> on usein jo valmiina. Varmista, että se esiintyy URL:ssa vain kerran (muuten voi tulla virhe: <i>URI option "appName" cannot appear more than once in the connection string</i>).
+
+**HUOM. Jos et ole lisännyt, lisää heti _.gitignore_-tiedostoon .env, jotta estämme arkaluontoisten tietojen pääsyn versionhallintaan.**
+
+Aloitetaan luomalla uusi models-kansio, jonne luodaan person.js-tiedosto:
+
+```text
+Luo projektin juureen kansio models ja sinne tiedosto person.js.
+
+Käytä mongoose-kirjastoa ja muodosta yhteys tietokantaan hyödyntämällä .env-tiedoston MONGODB_URI-muuttujaa.
+```
+
+Ja sitten määritellään Person-skeema:
+
+```text
+Määrittele Person-skeema (name ja number).
+
+Muokkaa skeeman toJSON-metodia siten, että se muuttaa _id-kentän merkkijonomuotoiseksi id-kentäksi ja poistaa __v-versionumeron.
+
+Eksportoi Person-malli muiden tiedostojen käyttöön.
+```
+
+Muokataan vielä index.js-tiedosto käyttämään uutta Person-mallia ja tietokantayhteyttä GET-metodissa:
+
+```text
+Päivitä index.js-tiedosto seuraavasti:
+
+Tuo Person-malli.
+
+Poista kovakoodattu persons-taulukko.
+```
+
+Tässä vaiheessa index.js-tiedostossa on käytössä Person-malli, ja aiemmin kovakoodattu persons-taulukko on poistettu.
+
+**Huom:** Tässä vaiheessa vain reitti <i>GET /api/persons</i> toimii, koska muut <i>api/persons</i> reitit käyttävät vielä kovakoodattua persons-taulukkoa.
+
+Siirrytään käyttämään MongoDB-tietokantaa aiemmin kovakoodatun persons-taulukon sijaan. Päivitetään GET /api/persons -reitti hakemaan henkilöt suoraan tietokannasta Person-mallin avulla.
+
+```text
+Päivitä index.js-tiedosto seuraavasti:
+
+Muuta GET /api/persons -reittiä siten, että se hakee kaikki henkilöt tietokannasta Person.find({}).then(...) -metodilla.
+
+Käytä .then() ja .catch() -rakenteita (ei vielä async/await).
+```
+
+Muuta vielä itse index.js-tiedoston PORT-muuttuja käyttämään .env-tiedostossa olevaa muuttujaa.
+
+Käynnistä nyt lokaalisti frontendissä Vite ja backendissä Express.
+
+Avaa Vite selaimessa ja nyt puhelinluettelossa pitäisi olla vain _Arto Vihavainen_, jonka lisäsimme aikaisemmassa tehtävässä tietokantaan.
+
+Varmista, että selaimen konsolissa eikä backendin terminaalissa näy virheitä.
+
 #### 3.14: puhelinluettelo ja tietokanta, step2
 
 Muuta backendiä siten, että uudet numerot <i>tallennetaan tietokantaan</i>. Varmista, että frontend toimii muutosten jälkeen.
 
 <i>**Tässä vaiheessa voit olla välittämättä siitä, onko tietokannassa jo henkilöä, jolla on sama nimi kuin lisättävällä.**</i>
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Kirjoita Copilotille:
+
+```text
+Muokkaa POST /api/persons -reittiä niin, että se tallentaa uuden henkilön tietokantaan käyttäen Mongoose Person-modelia.
+
+Palauta responsessa lisätyn henkilön tiedot JSON-muodossa.
+EI tarvitse tarkistaa duplikaatteja.
+Ei käytetä vielä async funktioita, käytä .then() .catch()
+Älä tee yhtään mitään muuta vielä.
+```
+
+Testaa lisätä uusi henkilö selaimessa ja varmista:
+
+- Ei virheitä konsolissa tai backendin terminaalissa.
+
+- Uusi lisätty henkilö renderöityy ruudulle.
+
+- Uusi lisätty henkilö löytyy MongoDB tietokannasta.
 
 </div>
 
@@ -938,11 +1087,61 @@ Muuta backendiä siten, että numerotietojen poistaminen päivittyy tietokantaan
 
 Varmista, että frontend toimii muutosten jälkeen.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Kirjoita Copilotille:
+
+```text
+Muokkaa DELETE /api/persons/:id -reittiä niin, että se poistaa henkilön tietokannasta findByIdAndDelete() avulla.
+
+Käsittele mahdolliset virheet ja palauta statuskoodi.
+Ei käytetä vielä async funktioita, käytä .then() .catch()
+Älä tee yhtään mitään muuta vielä.
+```
+
+Testaa toiminta selaimessa poistamalla haluttu henkilö puhelinluettelosta. Varmista lisäksi, että henkilö poistui tietokannasta.
+
 #### 3.16: puhelinluettelo ja tietokanta, step4
 
 Keskitä sovelluksen virheidenkäsittely middlewareen.
 
 Muista, että virheitä heittävät routejen metodit tarvitsevat myös kolmannen parametrin <i>next</i>
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Luodaan virheenkäsittely-middleware:
+
+```text
+Luo middlewares-kansio ja sinne errorHandler.js-tiedosto.
+```
+
+Projektissa pitäisi nyt olla middlewares-kansio, jossa sijaitsee errorHandler.js-tiedosto.
+
+Keskitetään sovelluksen virheenkäsittely errorHandler.js-tiedostoon:
+
+```text
+Keskitä virheidenkäsittely errorHandler.js-tiedostoon.
+
+Lisää tarvittava next-parametri reitteihin.
+
+Lokita virhe, tunnista virhe ja palauta status virheilmoituksen kera.
+```
+
+Navigoi _persons.rest_-tiedostoon ja lähetä DELETE-pyyntö
+
+``DELETE http://localhost:3001/api/persons/1``
+
+Id:llä 1 ei pitäisi löytyä henkilöä tietokannasta, joten vastauksen pitäisi olla 400 ja virheilmoitus <b>malformed id</b>. Vastauksen pitäisi olla kuvan mukainen:
+
+![rest-request - 400, malformed id](../../images/3/copilot/3_17_bad_request.png)
+
+Testaa myös toiminta frontendissä avaamalla kaksi ikkunaa http://localhost:5173/ ja poista toisella käyttäjä tietokannasta.
+
+Seuraavaksi poista jo poistettu käyttäjä toisella ikkunalla.
+
+Aikaisemmin implementoitu virheilmoitus pitäisi ilmestyä ruudulle edelleen ja ilmoittaa, että käyttäjä on jo poistettu.
+
+Konsoliin pitäisi myös tulla virhe 404 (not found).
 
 #### 3.17*: puhelinluettelo ja tietokanta, step5
 
@@ -952,6 +1151,19 @@ Laajenna backendisi käsittelemään tämä tilanne.
 
 Varmista, että frontend toimii muutosten jälkeen.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Luodaan uusi PUT-metodi:
+
+```text
+Luo PUT /api/persons/:id , joka päivittää jo olemassa olevan henkilön numeron tietokantaan.
+req.body sisältää name ja number.
+Keskitä edelleen mahdolliset virheet.
+Onnistuneessa tapauksessa palauta status ja päivitetty henkilö.
+```
+
+Päivitä lisäksi GET /api/persons/:id reitti käyttämään tietokantaa. Toteuta se itse ja huolehdi virheidenkäsittelystä.
+
 #### 3.18*: puhelinluettelo ja tietokanta, step6
 
 Päivitä myös HTTP GET <i>api/persons/:id</i> ja <i>info</i> -polkujen käsittely ja varmista niiden toimivuus suoraan selaimella, Postmanilla tai VS Coden REST Clientillä.
@@ -959,5 +1171,23 @@ Päivitä myös HTTP GET <i>api/persons/:id</i> ja <i>info</i> -polkujen käsitt
 Selaimella tarkastellen yksittäisen numerotiedon tulisi näyttää seuraavalta:
 
 ![Mentäessä yksittäisen henkilön urliin, renderöi selain JSON:in missä kenttinä nimi, puhelinnumero sekä id](../../images/3/49.png)
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Kirjoita Copilotille:
+
+```text
+Muokkaa lopuksi vielä seuraavaa endpointtia: app.get('/info') toimimaan tietokannan kanssa.
+Keskitä edelleen virheidenkäsittely.
+Älä tee muuta.
+```
+
+Testaa suoraan selaimessa:
+
+``http://localhost:3001/info``
+
+``http://localhost:3001/api/persons/6937f00e0bd0f9d2f6eb8dae``
+
+**Huom:** Kopioi toimiva id omasta MongoDB-tietokannasta jonkun henkilön kohdalta.
 
 </div>

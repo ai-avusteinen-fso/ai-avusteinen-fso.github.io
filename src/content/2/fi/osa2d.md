@@ -778,40 +778,40 @@ const delete = (id) => {
 
 <h4>Copilot-ohjeet tehtävälle</h4>
 
-Aloitetaan taas vaiheittain lisäämällä aluksi Delete painike. Kirjoita Copilotille:
+Aloitetaan taas vaiheittain lisäämällä aluksi "Delete"-painike. Kirjoita Copilotille:
 
 ```text
-Lisää Persons-tiedostoon jokaiselle riville 'Delete' painike.
+Lisää Persons-tiedostoon jokaiselle riville "Delete"-painike.
 ```
 
-Tämän jälkeen lisätään App.jsx Delete-painikkeen käsittelijä:
+Tämän jälkeen lisätään App.jsx-tiedostoon painikkeelle käsittelijä:
 
 ```text
-Lisää App.jsx handleDelete-funktio ja päivitä Persons-komponentti käyttämään sitä. Kun painiketta klikataan, käytä window.confirm kysymään "Delete ${p.name} ?".
+Lisää App.jsx-tiedostoon handleDelete-funktio ja päivitä Persons-komponentti käyttämään sitä. Kun painiketta klikataan, käytä window.confirm kysymään "Delete ${p.name} ?".
 Jos käyttäjä painaa OK, tee console.log ja tulosta poistetun henkilön nimi ja id.
 ```
 
-Meillä on nyt painikkeet, jotka avaavat window.confirm-vahvistusikkunan. Vahvistuksen jälkeen konsoliin tulostetaan poistettavan kohteen nimi ja id.
+Nyt sovelluksessa on "Delete"-painikkeet, jotka avaavat window.confirm-vahvistusikkunan. Vahvistuksen jälkeen konsoliin tulostetaan poistettavan kohteen nimi ja id.
 Säilytetään handleDelete-käsittelijä App.jsx:ssä seuraavia vaiheita ajatellen.
 
-Konsoliin pitäisi nyt tulostua henkilön nimi ja id, kun painetaan deleteä, ei vielä muuta.
+Konsoliin pitäisi nyt tulostua henkilön nimi ja id, kun painetaan deleteä, eikä vielä muuta.
 
 Seuraavaksi toteutetaan poisto JSON-serveriltä.
 Aloitetaan lisäämällä deletePerson(id)-funktio:
 
 ```text
-Lisää personService.js:ään deletePerson(id)-funktio, joka tekee axios.delete(baseUrl/id), palautetaan serverin vastaus.
+Lisää personService.js-tiedostoon deletePerson(id)-funktio, joka tekee axios.delete(baseUrl/id), palauta serverin vastaus.
 ```
 
 Muokataan vielä App.jsx käyttämään uutta deletePerson(id)-funktiota:
 
 ```text
-Muokkaa App.jsx:ää siten, että handleDeletessa kutsutaan personService.deletePerson ja poistetaan henkilö tilasta (setPersons).
+Muokkaa App.jsx:ää siten, että handleDeletessa kutsutaan personService.deletePerson(id) ja poistetaan henkilö tilasta (setPersons).
 Käytä .catch-rakennetta ja käsittele mahdolliset virhetilanteet.
-Voit poistaa aikaisemman console.log-kutsun.
+Poista aikaisempi console.log-kutsu.
 ```
 
-Poistuuko henkilö serveriltä? ``http://localhost:3001/persons`` (Päivitä sivu).
+Poistuuko henkilö serveriltä ``http://localhost:3001/persons`` ? (päivitä sivu)
 
 <h4>2.15*: puhelinluettelo step10</h4>
 
@@ -828,11 +828,11 @@ Jos henkilön tiedot löytyvät jo luettelosta, voi ohjelma kysyä käyttäjält
 Tehdään vaiheittain lisäämällä aluksi päivitysfunktio. Kirjoita Copilotille:
 
 ```text
-Luo personServiceen funktio updatePersonNumber() - funktio saa parametrina person-olion.
+Luo personService.js-tiedostoon funktio updatePersonNumber() - funktio saa parametrina person-olion.
 console.loggaa id ja numero, älä tee vielä muuta.
 ```
 
-Päivitetään seuraavaksi App.jsx käyttämään tätä uutta funktiota:
+Päivitetään seuraavaksi App.jsx-tiedosto käyttämään tätä uutta funktiota:
 
 ```text
 Muokkaa App.jsx:n handleSubmit-funktiota siten, että jos uusi nimi löytyy jo persons-tilasta, kysytään window.confirm(`${p.name} is already added to phonebook, replace the old number with a new one?`).
@@ -850,12 +850,12 @@ Aloitetaan muokkaamalla updatePersonNumber-funktiota:
 Muokkaa updatePersonNumber-funktiota tekemään axios.put(baseUrl/id, newPerson)-kutsu ja palautetaan serverin vastaus.
 ```
 
-Tämän jälkeen muokataan vielä App.jsx-tiedostoa:
+Tämän jälkeen muokataan vielä App.jsx-tiedostoa päivittämään persons-tila:
 
 ```text
 Muokkaa App.jsx handleSubmitia päivittämään persons-tila lopuksi.
-Käytä .catch ja käsittele mahdolliset virhetilanteet.
-Voit poistaa aikaisemman console.log-kutsun.
+Käytä .catch-rakennetta ja käsittele mahdolliset virhetilanteet alert-metodin avulla.
+Poista aikaisempi console.log-kutsu.
 ```
 
 Päivitä jo olemassa oleva yhteystieto ja varmista, että päivitys menee JSON-serverille ``http://localhost:3001/persons``.
@@ -864,6 +864,6 @@ Varmista myös, että sovelluksen tila päivittyy ja uusi numero renderöidään
 Testataan lopuksi vielä virheenkäsittely.
 Sulje JSON-serveri komentoriviltä ja yritä nyt uudestaan päivittää jo olemassa olevaa yhteystietoa.
 
-Kuten huomaamme, Copilot generoi catch-osioon koodin, joka suorittaa Alertin virheen tapahtuessa.
+Kuten huomaamme, Copilot generoi catch-osioon koodin, joka suorittaa alert-metodikutsun virheen tapahtuessa.
 
 </div>

@@ -1240,6 +1240,49 @@ describe('Blog app', () => {
 
 Testin <i>beforeEach</i>-alustuslohkon tulee nollata tietokannan tilanne esim. [materiaalissa](/osa5/end_to_end_testaus_playwright#testien-alustus) näytetyllä tavalla.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Luodaan uusi Playwright-testiprojekti ja kirjoitetaan testi, joka varmistaa, että blogilistan etusivu näyttää kirjautumislomakkeen.
+
+Avaa _tests/test.js_ ja kirjoita Copilotille:
+
+```text
+Luo Playwright-testi blogilistan sovellukselle:
+- Luo testitiedosto joka importaa @playwright/test kirjaston
+- Kirjoita beforeEach-lohko, joka kutsuu request.post('http://localhost:3003/api/testing/reset') tietokannan nollaamiseksi
+- Luo testikäyttäjä kutsumalla request.post('http://localhost:3003/api/users') parametreilla: name, username, password
+- Navigoi sovellukseen page.goto('http://localhost:5173')
+- Kirjoita testi, joka varmistaa, että sivulla näkyy kirjautumislomake: etsi username-kenttä, password-kenttä ja login-nappi
+```
+
+Seuraavaksi asennetaan Playwright ja konfiguroidaan se:
+
+Avaa _playwright.config.js_ ja kirjoita Copilotille:
+
+```text
+Konfiguroi Playwright testiprojektia varten:
+- Aseta baseURL: 'http://localhost:5173'
+- Aseta timeout: 6000 (6 sekuntia)
+- Aseta webServer: { command: 'npm run dev', url: 'http://localhost:5173' } (sovelluksen automaattinen käynnistys)
+- Aseta workers: 1 (testit sarjallisesti)
+- Konfiguroi myös webServer backendin portin 3003 osalta jos tarpeellista
+```
+
+**Huom:** Jos webServer ei käynnistä oikeaa blogi-fronttia tässä projektissa, poista webServer konfiguraatio ja käynnistä frontend ja backend erikseen ennen testejä.
+
+Testaa:
+
+```bash
+npx playwright test tests/test.js
+```
+
+Testaa, että:
+
+- Playwright on asennettu ja konfiguroitu oikein
+- Tietokanta nollaantuu ennen jokaista testiä
+- Testikäyttäjä luodaan onnistuneesti
+- Kirjautumislomake näkyy etusivulla
+
 #### 5.18: blogilistan end to end ‑testit, step2
 
 Tee testit kirjautumiselle. Testaa sekä onnistunut että epäonnistunut kirjautuminen. Luo testejä varten käyttäjä <i>beforeEach</i>-lohkossa. 
@@ -1270,6 +1313,42 @@ describe('Note app', () => {
 })
 ```
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Kirjoitetaan testit kirjautumiselle: testataan sekä onnistunut että epäonnistunut kirjautuminen.
+
+Avaa _tests/test.js_ ja kirjoita Copilotille:
+
+```text
+Luo apufunktio kirjautumista varten:
+- Luo async-funktio loginWith(page, username, password)
+- Funktio täyttää username-kentän: await page.getByLabel('username').fill(username)
+- Täytä password-kenttä: await page.getByLabel('password').fill(password)
+- Klikkaa login-nappia: await page.getByRole('button', { name: 'login' }).click()
+```
+
+Seuraavaksi kirjoitetaan testit kirjautumiselle:
+
+Avaa _tests/test.js_ ja kirjoita Copilotille:
+
+```text
+Kirjoita testi onnistuneelle kirjautumiselle describe('Login')-lohkossa:
+- Käytä await loginWith(page, 'mluukkai', 'salainen')-apufunktiota
+- Varmista, että sivulla näkyy 'Matti Luukkainen logged in' tai vastaava teksti
+- Käytä await expect(page.getByText('Matti Luukkainen')).toBeVisible()
+
+Kirjoita testi epäonnistuneelle kirjautumiselle:
+- Käytä loginWith(page, 'mluukkai', 'wrong')-apufunktiota väärällä salasanalla
+- Varmista, että virheilmoitus näkyy: await expect(page.getByText(/invalid credentials|wrong password/i)).toBeVisible()
+- Varmista, että käyttäjän nimeä ei näy: await expect(page.getByText('Matti Luukkainen')).not.toBeVisible()
+```
+
+Testaa, että:
+
+- Onnistunut kirjautuminen toimii ja käyttäjän nimi näkyy
+- Epäonnistunut kirjautuminen näyttää virheilmoituksen
+- Apufunktio loginWith() toimii oikein molemmissa testeissä
+
 #### 5.19: blogilistan end to end ‑testit, step3
 
 Tee testi, joka varmistaa, että kirjautunut käyttäjä pystyy luomaan blogin. Testin runko voi näyttää seuraavalta
@@ -1288,23 +1367,195 @@ describe('When logged in', () => {
 
 Testin tulee varmistaa, että luotu blogi tulee näkyville blogien listalle.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Kirjoitetaan testi, joka varmistaa, että kirjautunut käyttäjä voi luoda uuden blogin.
+
+Avaa _tests/test.js_ ja kirjoita Copilotille:
+
+```text
+Luo apufunktio blogin luomiselle:
+- Luo async-funktio createBlog(page, title, author, url)
+- Klikkaa "new blog" -nappia: await page.getByRole('button', { name: /new blog/i }).click()
+- Täytä title-kenttä: await page.getByLabel('title').fill(title)
+- Täytä author-kenttä: await page.getByLabel('author').fill(author)
+- Täytä url-kenttä: await page.getByLabel('url').fill(url)
+- Klikkaa create/save -nappia ja odota, että blogi näkyy sivulla
+```
+
+Seuraavaksi kirjoita testi blogin luomiselle. Tee tämä osa itse.
+
+Testaa, että:
+
+- Käyttäjä voi kirjautua sisään
+- Blogin luomislomake avautuu
+- Uusi blogi luodaan onnistuneesti
+- Luotu blogi näkyy blogien listalla
+
 #### 5.20: blogilistan end to end ‑testit, step4
 
 Tee testi, joka varmistaa, että blogia voi likettää.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Kirjoitetaan testi, joka varmistaa, että blogia voi likettää.
+
+Avaa _tests/test.js_ ja kirjoita Copilotille:
+
+```text
+Kirjoita testi blogin likettämiselle describe('When logged in')-lohkossa:
+- Määritä testeissä käytettävä title ja etsi blogi titlen perusteella:
+- const title = 'Blog1'
+- const blog = page.locator('.blog').filter({ hasText: title })
+- Jos blogi näyttää vain titlen ja authorin oletuksena, klikkaa "view" -nappia *blogin sisältä*
+- await blog.getByRole('button', { name: /view/i }).click()
+- Klikkaa like-nappia *blogin sisältä*: 
+- await blog.getByRole('button', { name: /like/i }).click()
+```
+
+Varmista, että likes-laskuri toimii oikein:
+
+Avaa _tests/test.js_ ja kirjoita Copilotille:
+
+```text
+Päivitä testi:
+- Etsi blogi vain titlen perusteella:
+- const title = 'Blog1'
+- const blog = page.locator('.blog').filter({ hasText: title })
+- await blog.getByRole('button', { name: /view/i }).click()
+- Tarkista alkuperäinen like-määrä (esim. 0)
+- Klikkaa like-nappia kahdesti ja varmista että luku päivittyy
+- Esim: klikkaa likea kahdesti ja varmista:
+- await blog.getByRole('button', { name: /like/i }).click()
+- await blog.getByRole('button', { name: /like/i }).click()
+- await expect(blog.getByText(/likes\s+2/i)).toBeVisible()
+```
+
+Testaa, että:
+
+- Blogin view-nappia voidaan klikata
+- Like-nappi tulee näkyviin
+- Like-nappia voidaan klikata useita kertoja
+- Likejen määrä päivittyy oikein sivulla
 
 #### 5.21: blogilistan end to end ‑testit, step5
 
 Tee testi, joka varmistaa, että blogin lisännyt käyttäjä voi poistaa blogin. Jos käytät poisto-operaation yhteydessä _window.confirm_-dialogia, saatat joutua hieman etsimään miten dialogin käyttö tapahtuu Playwright-testeistä käsin.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Kirjoitetaan testi blogin poistamiselle.
+
+Avaa _tests/test.js_ ja kirjoita Copilotille:
+
+```text
+Kirjoita testi blogin poistamiselle describe('When logged in')-lohkossa:
+- beforeEach: luo blogi käyttämällä createBlog-apufunktiota
+- Etsi blogi sivulta ja klikkaa "view" -nappia sen laajentamiseksi
+- Käsittele window.confirm-dialogi: lisää page.on('dialog', dialog => dialog.accept()) ennen poisto-nappia
+- Hae delete/remove -nappi ja klikkaa sitä: await page.getByRole('button', { name: /delete|remove/i }).click()
+- Varmista, että blogi poistuu: await expect(page.getByText('blogTitle')).not.toBeVisible()
+```
+
+Varmista, että dialogi käsitellään oikein:
+
+Avaa _tests/test.js_ ja kirjoita Copilotille:
+
+```text
+Päivitä testi:
+- Ennen delete-napin klikkaamista: page.once('dialog', dialog => dialog.accept())
+- Klikkaa delete-nappia: await page.getByRole('button', { name: /delete/i }).click()
+- Odota, että blogi poistuu: await expect(page.getByText('blogTitle')).not.toBeVisible()
+- Vaihtoehtoisesti käytä waitFor({ state: 'hidden' }) varmistaaksesi, että poisto on valmis
+```
+**Huom:** Lisää await ennen playwright-kutsuja.
+
+Testaa, että:
+
+- Blogi voidaan laajentaa
+- Delete-nappi on näkyvissä
+- Confirm-dialogi käsitellään automaattisesti
+- Blogi poistuu näkyvistä poiston jälkeen
+
 #### 5.22: blogilistan end to end ‑testit, step6
 
 Tee testi, joka varmistaa, että vain blogin lisännyt käyttäjä näkee blogin poistonapin.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Kirjoitetaan testi, joka varmistaa, että vain blogin luoja näkee poisto-napin.
+
+Avaa _tests/test.js_ ja kirjoita Copilotille:
+
+```text
+Muokkaa beforeEach-lohkoa useamman käyttäjän luomiselle:
+- Luo testikäyttäjä 1: request.post('/api/users', { data: { name: 'User 1', username: 'user1', password: 'password1' } })
+- Luo testikäyttäjä 2: request.post('/api/users', { data: { name: 'User 2', username: 'user2', password: 'password2' } })
+- Tallenna käyttäjät muuttujiin (tallennat ne tarvittaessa myöhemmin testeissä)
+```
+
+Seuraavaksi kirjoitetaan testi access-kontrollille:
+
+Avaa _tests/test.js_ ja kirjoita Copilotille:
+
+```text
+Kirjoita testi describe('Blog access control')-lohkossa:
+- Kirjaudu sisään user1:llä (käytä loginWith-apufunktiota)
+- Luo blogi createBlog-apufunktiolla
+- Laajenna blogi klikkaamalla "view" -nappia
+- Varmista, että delete-nappi näkyy: await expect(page.getByRole('button', { name: /delete/i })).toBeVisible()
+- Kirjaudu ulos: klikkaa logout-nappia tai tyhjennä localStorage
+- Kirjaudu sisään user2:lla
+- Etsi ja laajenna blogi: page.getByText('blogTitle'), klikkaa view
+- Varmista että delete-nappi EI näy: await expect(page.getByRole('button', { name: /delete/i })).not.toBeVisible()
+```
+
+Testaa, että:
+
+- Kahden käyttäjän luominen beforeEach:ssä toimii
+- Blogin luoja näkee poisto-napin
+- Toinen käyttäjä ei näe poisto-nappia
+- Kirjautuminen ja uloskirjautuminen toimii oikein
 
 #### 5.23: blogilistan end to end ‑testit, step7
 
 Tee testi, joka varmistaa, että blogit järjestetään likejen mukaiseen järjestykseen, eniten likejä saanut blogi ensin.
 
 <i>Tämä tehtävä on edellisiä huomattavasti haastavampi.</i>
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Kirjoitetaan testi, joka varmistaa, että blogit järjestetään likejen mukaan laskevassa järjestyksessä.
+
+Avaa _tests/test.js_ ja kirjoita Copilotille:
+
+```text
+Luo apufunktio blogin luomiselle likeineen:
+- Luo async-funktio createBlogWithLikes(page, title, author, url, likes)
+- Kutsu createBlog-apufunktiota blogin luomiseksi
+- Laajenna blogin: await page.getByRole('button', { name: /view/i }).click()
+- Klikkaa like-nappia haluttu määrä kertoja: for(let i = 0; i < likes; i++) { await page.getByRole('button', { name: /like/i }).click() }
+```
+
+Seuraavaksi kirjoitetaan testi järjestykselle:
+
+Avaa _tests/test.js_ ja kirjoita Copilotille:
+
+```text
+Kirjoita testi describe('Blog order')-lohkossa:
+- beforeEach: luo kolme blogia eri määrillä likejä: createBlogWithLikes(page, 'Blog1', 'Author1', 'url1', 2), createBlogWithLikes(page, 'Blog2', 'Author2', 'url2', 5), createBlogWithLikes(page, 'Blog3', 'Author3', 'url3', 1)
+- Hae kaikki blogit sivulta: const blogs = await page.locator('.blog').all() tai page.locator('[data-testid="blog"]').all()
+- Käy kaikki blogit läpi: for(const blog of blogs) { const text = await blog.textContent() }
+- Parsi likejen määrä tekstistä säännöllisellä lauseella: const matches = text.match(/likes\s+(\d+)/)
+- Varmista, että ensimmäisen blogin likes >= toisen blogin likes >= kolmannen blogin likes
+```
+
+Testaa, että:
+
+- Apufunktio createBlogWithLikes() toimii oikein
+- Kolme blogia luodaan eri määrillä likejä
+- Blogit ovat järjestyksessä laskevasti likejen perusteella
+- Eniten likejä saaneet blogit näkyvät ensin listalla
 
 Tämä oli osan viimeinen tehtävä ja on aika pushata koodi GitHubiin sekä merkata tehdyt tehtävät [palautussovellukseen](https://studies.cs.helsinki.fi/stats/courses/fullstackopen).
 

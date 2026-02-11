@@ -761,7 +761,7 @@ Tee Node.js Express-sovellus, joka tarjoaa osoitteessa http://localhost:3001/api
 ]
 ```
 
-Navigoi selaimessa ``http://localhost:3001/api/persons``
+Navigoi selaimessa osoitteeseen ``http://localhost:3001/api/persons``
 
 Puhelinluettelon pitäisi nyt näkyä ruudulla.
 
@@ -783,7 +783,7 @@ Lisätään sovellukseen uusi GET-reitti. Kirjoita Copilotille:
 
 ```text
 Luo Express-reitti /info, joka palauttaa HTML-sivun.
-Sivulla näytetään pyyntöhetken kellonaika sekä teksti, jossa kerrotaan montako henkilöä puhelinluettelossa on (persons.length).
+Sivulla näytetään pyyntöhetken kellonaika sekä teksti, jossa kerrotaan, montako henkilöä puhelinluettelossa on (persons.length).
 Käytä new Date() ajankohdan hakemiseen.
 ```
 
@@ -806,9 +806,9 @@ Jos puhelinnumeroa ei löydy, palautetaan status 404.
 
 Kokeile toiminta selaimessa ``http://localhost:3001/api/persons/1``
 
-Kokeile myös 'Numeroa ei löydy'-tilanne ``http://localhost:3001/api/persons/101``
+Kokeile myös 'Numeroa ei löydy' -tilanne osoitteessa ``http://localhost:3001/api/persons/101``
 
-Jos emme olisi palauttaneet 404 statusta, sivu olisi jäänyt ikuisesti odottamaan vastausta, koska se ei löydä henkilöä 101. Backend ei siis tiedä mitä pitää palauttaa tässä tilanteessa.
+Jos emme olisi palauttaneet 404 statusta, sivu olisi jäänyt ikuisesti odottamaan vastausta, koska henkilöä 101 ei löydy. Backend ei siis tiedä, mitä pitää palauttaa tässä tilanteessa.
 
 #### 3.4: puhelinluettelon backend step4
 
@@ -818,12 +818,12 @@ Testaa toiminnallisuus Postmanilla tai Visual Studio Coden REST clientillä.
 
 <h4>Copilot-ohjeet tehtävälle</h4>
 
-Seuraavat Copilot-ohjeet ovat tarkoitettu niille, jotka käyttävät tehtävässä Visual Studio Coden REST-clienttiä.
+Seuraavat Copilot-ohjeet ovat tarkoitettuja niille, jotka käyttävät tehtävässä Visual Studio Coden REST-clienttiä.
 
 Luodaan ensin uusi DELETE-reitti:
 
 ```text
-Tee express DELETE-reitti /api/persons/:id yksittäisen henkilön poistoon id:llä.
+Tee Express DELETE -reitti /api/persons/:id yksittäisen henkilön poistoon id:llä.
 Jos puhelinnumeroa ei löydy, palautetaan status 404.
 ```
 
@@ -833,11 +833,11 @@ Luodaan DELETE-reitin testausta varten uusi persons.rest-tiedosto:
 Tee uusi kansio rest ja sinne persons.rest-tiedosto. Sijoita tiedostoon DELETE-testi http://localhost:3001/api/persons/1
 ```
 
-Navigoi persons.rest tiedostoon ja paina ``Send Request``.
+Navigoi persons.rest-tiedostoon ja paina ``Send Request``.
 
-Tarkista ``http://localhost:3001/api/persons``, että henkilö id:llä 1 on poistunut.
+Tarkista osoitteesta ``http://localhost:3001/api/persons``, että henkilö id:llä 1 on poistunut.
 
-Lähetä REST-tiedostossa DELETE-pyyntö uudestaan, nyt statuksen pitäisi olla 404, koska henkilö on jo poistettu.
+Lähetä REST-tiedostossa DELETE-pyyntö uudestaan. Nyt statuksen pitäisi olla 404, koska henkilö on jo poistettu.
 
 ![rest DELETE 404 response when user is already deleted'](../../images/3/copilot/3_4_rest.png)
 
@@ -854,7 +854,7 @@ Luodaan POST-reitti index.js-tiedostoon:
 ```text
 Tee express POST-reitti /api/persons henkilön lisäämiseksi puhelinluetteloon.
 Tee tarkistus, että lähetetty name ja number kentät ovat olemassa, jos ei - palauta status 400 virheilmoituksen kanssa.
-Generoi uniikki id käyttämällä Math.random() 1-1000000 luvut.
+Generoi uniikki id Math.random()-funktiolla väliltä 1–1000000.
 Lopuksi lisää uusi henkilö persons-taulukkoon ja palauta lisätty henkilö JSON-muodossa sekä status 201.
 ```
 
@@ -880,7 +880,7 @@ Tarkistamme jo requestin name- ja number-kentät, lisätään kuitenkin olemassa
 
 ```text
 Lisää olemassa olevan nimen tarkistus POST-reittiin.
-Jos nimi on jo listassa res.status(400).json({ error: 'name must be unique' });
+Jos nimi on jo listassa palauta res.status(400).json({ error: 'name must be unique' });
 ```
 
 Testaa persons.rest-tiedoston POST-metodilla lisätä sama henkilö kaksi kertaa.
@@ -994,13 +994,13 @@ Kokeile lähettää persons.rest-tiedostosta POST-pyyntö ja tarkastele terminaa
 
 Yllä olevassa kuvassa nähdään järjestyksessä:
 
-* **Status-304** - Sivu on ladattu aikaisemmin, jolloin selain käyttää välimuistia (cache) ladatakseen sivun.
+- **Status-304** - Sivu on ladattu aikaisemmin, jolloin selain käyttää välimuistia (cache) ladatakseen sivun.
 
-* **Status-200** - Latasin yksittäisen henkilön tiedot id:llä 2.
+- **Status-200** - Latasin yksittäisen henkilön tiedot id:llä 2.
 
-* **Status-404** - Henkilöä id:llä 99 ei löytynyt.
+- **Status-404** - Henkilöä id:llä 99 ei löytynyt.
 
-* **Status-201** - Uusi henkilö lisättiin onnistuneesti (Huom. emme näe vielä body-dataa).
+- **Status-201** - Uusi henkilö lisättiin onnistuneesti (Huom. emme näe vielä body-dataa).
 
 #### 3.8*: puhelinluettelon backend step8
 

@@ -1043,6 +1043,121 @@ describe('Blog app', function() {
 
 Testin <i>beforeEach</i>-alustuslohkon tulee nollata tietokannan tilanne esim. [materiaalissa](/osa5/end_to_end_testaus#tietokannan-tilan-kontrollointi) näytetyllä tavalla.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+**HUOM:** Jos testeissä tulee paljon virheitä, kannattaa antaa copilotin ajaa testit. Voit käyttää joko graafista käyttöliittymää tai voit ajaa testit suoraan komentoriviltä.
+
+Aloitetaan luomalla E2E-testeille oma projekti.
+
+Luo erillinen E2E-kansio. Nimeä kansio nimellä "e2e-tests-cypress". Ja luo sinne uusi projekti komennolla:
+
+```bash
+mkdir e2e-tests-cypress
+cd e2e-tests-cypress
+npm init -y
+```
+
+Ja asenna cypress komennolla:
+
+```bash
+npm install --save-dev cypress
+```
+
+Lisää nämä scriptit package.json-tiedostoon:
+
+```text
+{
+  "scripts": {
+    "test:e2e": "cypress run",
+    "cypress:open": "cypress open"
+  }
+}
+```
+
+Lisää tämä scripti vielä blogisovelluksen backendin package.json-tiedostoon:
+
+```text
+"start:test": "cross-env NODE_ENV=test node --watch index.js"
+```
+
+Ja lataa myös tämä paketti blogisovelluksen backendiin:
+
+```text
+npm install --save-dev cross-env
+```
+
+Käynnistä blogisovelluksen backend tällä uudella scriptillä ja käynnistä myös frontend.
+
+Käynnistä cypress kerran, että saadaan tarvittavat kansiot ja tiedostot:
+
+```text
+npm run cypress:open
+```
+
+Cypressin UI pitäisi tulla näkyviin, tehdään seuraavat valinnat cypressin UI:ssa:
+
+```text
+- Valitse E2E testing
+- Paina continue seuraavassa ikkunassa
+
+Tämän pidemmälle ei tarvitse mennä, jos haluat ajaa testejä komentoriviltä.
+```
+
+Nyt voit sulkea cypressin UI:n, jos ajat testejä komentoriviltä.
+
+Lisätään vielä yksi asia ennen kuin päästään tehtäviin.
+
+Avaa e2e-tests-cypress/cypress.config.js ja kirjoita Copilotille:
+
+```text
+Lisää tiedostoon baseUrl, joka on: http://localhost:5173.
+```
+
+Tämän ansiosta kun frontin osoitetta ei tarvitse kirjoittaa jokaiseen testiin, riittää että kirjoitat esim. cy.visit('/').
+
+Katso kuitenkin että frontend pyörii oikeassa osoitteessa, eli: http://localhost:5173, jos frontend pyörii jossakin muussa osoitteessa vaihda tuo baseUrl:n osoite vastaamaan sitä.
+
+Luodaan blogisovelluksen backendiin reset-route, joka on käytettävissä vain testitilassa ja jonka avulla tietokanta voidaan resetoida.
+
+Avaa blogisovelluksen backend ja kirjoita Copilotille:
+
+```text
+- Luo sovelluksen controllers-kansioon tiedosto testing.js. Lisää tiedostoon reset funktio, joka tyhjentää blogit ja käyttäjät MongoDB tietokannasta. Lähetä lopuksi res.status(204).end()
+- Luo sovelluksen app.js tiedostoon route /api/testing/reset, joka mountataan vain jos process.env.NODE_ENV === 'test'.
+```
+
+Luodaan reset-endpoint ja käyttäjän luominen omiksi cypress komennoikseen.
+
+```text
+- Laita cypress/support/commands.js -tiedostoon omat Cypress-komennot
+cy.request('POST', '/api/testing/reset') ja cy.request('POST', '/api/users', { name, username, password }).
+- Lisää cypress/support/e2e.js -tiedostoon import './commands', jotta komennot ovat käytettävissä kaikissa Cypress-testeissä.
+Hyödynnä cypress.config.js -tiedostossa määriteltyjä baseUrl-muuttujaa testien ja komentojen sisällä.
+```
+
+Luo Cypress-E2E-testi blogilistan sovellukselle:
+
+```text
+- Luo testitiedosto blog.test.cy.js cypress/e2e/-kansioon
+- Resettaa tietokanta ja luo testikäyttäjä describe-lohkon alussa, hyödynnä juuri luotuja komentoja.
+- Navigoi sovellukseen komennolla cy.visit('/')
+- Kirjoita testi, joka varmistaa, että sivulla näkyy kirjautumislomake:
+etsi username-kenttä, password-kenttä ja login-nappi
+```
+
+Testaa:
+
+```bash
+npm run test:e2e
+```
+
+Testaa, että:
+
+- Cypress on asennettu ja konfiguroitu oikein
+- Tietokanta nollaantuu ennen jokaista testiä
+- Testikäyttäjä luodaan onnistuneesti
+- Kirjautumislomake näkyy etusivulla
+
 #### 5.18: blogilistan end to end ‑testit, step2
 
 Tee testit kirjautumiselle ja testaa sekä onnistunut että epäonnistunut kirjautuminen. Luo testejä varten käyttäjä <i>beforeEach</i>-lohkossa. 
@@ -1073,6 +1188,32 @@ describe('Blog app', function() {
 })
 ```
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Tehdään testit onnistuneelle kirjautumiselle ja epäonnistuneelle kirjautumiselle.
+
+Avaa cypress/e2e/blog.test.cy.js ja kirjoita Copilotille:
+
+```text
+Tee testit erilliseen describe('Login')-lohkoon onnistuneelle ja epäonnistuneelle kirjautumiselle, lisää lohko kuitenkin describe(Blog app) sisään:
+- Luo loginWith-apufunktio support/commands.js -tiedostoon
+- Onnistunut kirjautuminen: syötä oikea käyttäjätunnus ja salasana ja varmista, että  käyttäjä on kirjautuneena tarkistamalla, että logout-nappi näkyy: cy.contains('logout').should('exist')
+- Epäonnistunut kirjautuminen: syötä väärä käyttäjätunnus tai salasana ja varmista, että virheilmoitus näkyy notification- tai error-elementissä: cy.get('.notification, .error').should('contain', '<virheteksti>')
+```
+
+**Huom:** Korvaa &lt;virheteksti&gt; sovelluksesi oikealla virheilmoituksella. Jos sovelluksessasi ei näy _logout_-nappia kirjautumisen jälkeen, tarkista onnistuminen jollain muulla varmasti näkyvällä elementillä/tekstillä.
+
+Testaa:
+
+```bash
+ npm run test:e2e
+```
+
+Testaa, että:
+
+- Onnistunut kirjautuminen toimii ja käyttäjän nimi näkyy
+- Epäonnistunut kirjautuminen näyttää virheilmoituksen
+
 #### 5.19: blogilistan end to end ‑testit, step3
 
 Tee testi, joka varmistaa, että kirjautunut käyttäjä pystyy luomaan blogin. Testin runko voi näyttää seuraavalta
@@ -1096,19 +1237,135 @@ describe('Blog app', function() {
 
 Testin tulee varmistaa, että luotu blogi tulee näkyville blogien listalle.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Tehdään testi blogin luomiselle.
+
+Avaa cypress/e2e/blog.test.cy.js ja kirjoita Copilotille:
+
+```text
+Tee testi erillisen describe('When logged in') -lohkon sisälle, lisää lohko kuitenkin describe(Blog app) sisään:
+- Kirjaudu testikäyttäjällä sisään loginWith-apufunktiota hyödyntäen
+- Varmista, että kirjautunut käyttäjä voi avata blogin luomisen näkymän uusi blogi napista ja luoda blogin create-napista.
+- Varmista, että luotu blogi ilmestyy blogilistalle
+```
+
+**Huom:** Jos nappien tekstit poikkeavat sovelluksessasi, käytä niitä tekstejä, jotka oikeasti näkyvät sivullasi.
+
+Testaa, että:
+
+- Käyttäjä voi kirjautua sisään
+- Blogin luomislomake avautuu
+- Uusi blogi luodaan onnistuneesti
+- Luotu blogi näkyy blogien listalla
+
 #### 5.20: blogilistan end to end ‑testit, step4
 
 Tee testi, joka varmistaa, että blogia voi likettää.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Avaa support/commands.js -tiedosto ja kirjoita Copilotille:
+
+```text
+Luo createBlog-apufunktio support/commands.js -tiedostoon 
+```
+
+createBlog apufunktio on nyt luotu
+
+Tehdään testi blogin likettämiselle.
+
+Avaa cypress/e2e/blog.test.cy.js ja kirjoita Copilotille:
+
+```text
+- Kirjoita testi blogin tykkäämiselle describe('When logged in') -lohkoon:
+- beforeEach: luo blogi createBlog-apufunktiolla joka juuri lisättiin
+- Avaa blogin tiedot: etsi blogi otsikon perusteella ja klikkaa sen view-painiketta (jos - lisätiedot eivät näy oletuksena). Käytä .blog-expanded-luokkaa.
+- Tykkää blogista: klikkaa like-painiketta kaksi kertaa
+- Varmista tulos: tarkista, että tykkäysten määrä kasvaa. Tarkistus perustuu "likes: X" tekstiin.
+```
+
+Yhtenäistetään blogin tiedot.
+
+```text
+Yhtenäistä blogin tiedot testeissä käyttämällä blogData-oliota.
+```
+
+Testaa, että:
+
+- Blogin view-nappia voidaan klikata
+- Like-nappi tulee näkyviin
+- Like-nappia voidaan klikata useita kertoja
+- Likejen määrä päivittyy oikein sivulla
 
 #### 5.21: blogilistan end to end ‑testit, step5
 
 Tee testi, joka varmistaa, että blogin lisännyt käyttäjä voi poistaa blogin.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Kirjoitetaan testi blogin poistamiselle.
+
+Avaa cypress/e2e/blog.test.cy.js ja kirjoita Copilotille:
+
+```text
+Kirjoita testi blogin poistamiselle describe('When logged in') -lohkoon:
+- beforeEach: luo blogi createBlog-apufunktiota käyttäen, joka on commands.js-tiedostossa
+- Etsi blogi sivulta ja laajenna se: hae blogi otsikon perusteella ja klikkaa sen view-painiketta (jos blogin lisätiedot eivät näy oletuksena)
+- Käsittele varmistusdialogi: aseta ennen poistoa confirm-handler, esim. cy.on('window:confirm', () => true)
+- Poista blogi: klikkaa delete/remove-painiketta rajaten haku juuri siihen blogiin.
+- Varmista lopputulos: tarkista, että blogi ei enää näy blogilistalla koodilla: cy.contains(blogData.title).should('not.exist');
+```
+
+Testaa, että:
+
+- Blogi voidaan laajentaa
+- Delete-nappi on näkyvissä
+- Confirm-dialogi käsitellään automaattisesti
+- Blogi poistuu näkyvistä poiston jälkeen
+
 #### 5.22: blogilistan end to end ‑testit, step6
 
 Tee testi, joka varmistaa, että vain blogin lisännyt käyttäjä näkee blogin poistonapin.
 
-#### 5.23: blogilistan end to end ‑testit, step6
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Kirjoitetaan testi, joka varmistaa, että vain blogin luoja näkee poisto-napin.
+
+Avaa cypress/e2e/blog.test.cy.js ja kirjoita Copilotille:
+
+```text
+Muokkaa beforeEach-lohkoa siten, että siinä luodaan useampi testikäyttäjä:
+- Luo testikäyttäjä 1: tee POST-pyyntö /api/users-rajapintaan ja luo käyttäjä User 1 (user1 / password1)
+- Luo testikäyttäjä 2: tee POST-pyyntö /api/users-rajapintaan ja luo käyttäjä User 2 (user2 / password2)
+- Tallenna käyttäjät muuttujiin: säilytä käyttäjien tiedot muuttujissa, jotta voit hyödyntää niitä myöhemmin testeissä
+```
+
+Seuraavaksi kirjoitetaan testi access-kontrollille:
+
+```text
+- Luo describe('Blog access control') -lohko.
+- beforeEach: resetoi tietokanta, luo user1 ja user2, mene etusivulle.
+- it('delete button is visible only to blog owner', ...):
+- Kirjaudu user1:llä (cy.loginWith).
+- Luo blogi (cy.createBlog).
+- Laajenna blogi (cy.contains(blogData.title)...view...).
+- Varmista delete-painike näkyy (cy.get('.blog-expanded')...should('exist')).
+- Kirjaudu ulos (cy.contains('logout').click()).
+- Varmista login-lomake näkyy (cy.get('input[name="Username"]')).
+- Kirjaudu user2:lla (cy.loginWith).
+- Laajenna blogi.
+- Varmista delete-painike ei näy (should('not.exist')).
+```
+
+Testaa, että:
+
+- Kahden käyttäjän luominen beforeEach:ssä toimii
+- Blogin luoja näkee poisto-napin
+- Toinen käyttäjä ei näe poisto-nappia
+- Kirjautuminen ja uloskirjautuminen toimii oikein
+
+#### 5.23: blogilistan end to end ‑testit, step7
 
 Tee testi, joka varmistaa, että blogit järjestetään likejen mukaiseen järjestykseen, eniten likejä saanut blogi ensin.
 
@@ -1120,6 +1377,55 @@ cy.get('.blog').eq(1).should('contain', 'The title with the second most likes')
 ``` 
   
 Saatat törmätä tässä tehtävässä ongelmaan jos klikkaat monta kertaa peräkkäin <i>like</i>-nappia. Saattaa olla, että näin tehdessä liketykset tehdään samalle oliolle, eli Cypress ei "ehdi" välissä päivittää sovelluksen tilaa. Eräs tapa korjata ongelma on odottaa jokaisen klikkauksen jälkeen likejen lukumäärä päivittymistä ja tehdä uusi liketys vasta tämän jälkeen.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Kirjoitetaan testi, joka varmistaa, että blogit järjestetään tykkäysten (likes) mukaan laskevasti: eniten likejä saanut blogi näkyy listalla ensimmäisenä.
+
+Avaa support/commands.js ja kirjoita Copilotille:
+
+```text
+Luo apufunktio blogin luomiselle tykkäyksineen support/commands.js -tiedostoon:
+- Luo Cypress-komento createBlogWithLikes(title, author, url, likes) (eli cy.createBlogWithLikes(...))
+- Kutsu cy.createBlog({ title, author, url }) blogin luomiseksi
+- Laajenna blogi: etsi luotu blogi cy.contains('.blog-collapsed', title) ja klikkaa sen view-painiketta saman elementin sisältä (älä käytä parent() eikä cy.get('.blog-expanded') ilman title-rajausta)
+- Lisää tykkäyksiä: klikkaa like-painiketta likes-määrä kertaa rajaten toiminnot cy.contains('.blog-expanded', title) -elementin sisälle
+- Varmista lopuksi, että blogin näkyvä tykkäysmäärä vastaa annettua arvoa (esim. likes: <likes>)
+- Sulje blogi lopuksi (hide), jotta seuraavan blogin käsittely ei jätä useaa .blog-expanded-elementtiä sivulle
+```
+
+Seuraavaksi kirjoitetaan testi järjestykselle:
+
+Avaa cypress/e2e/blog.test.cy.js ja kirjoita Copilotille:
+
+```text
+Kirjoita testi describe('Blog order')-lohkossa:
+
+- beforeEach: resetoi tietokanta, luo käyttäjä, käy etusivulla ja kirjaudu sisään
+- Luo kolme blogia eri määrillä tykkäyksiä käyttäen apufunktiota: cy.createBlogWithLikes('Blog1', 'Author1', 'url1', 2), cy.createBlogWithLikes('Blog2', 'Author2', 'url2', 5), cy.createBlogWithLikes('Blog3', 'Author3', 'url3', 1), 
+- Älä käytä cy.waitiä erikseen, vaan luota siihen että apufunktio hoitaa blogin avaamisen, tykkäykset ja sulkemisen oikein
+- Varmista, että blogit jäävät lopuksi collapsed-tilaan, jotta listalla on täsmälleen kolme blogielementtiä
+```
+
+Ja tehdään vielä itse testi:
+
+```text
+Lisää nämä muutokset vielä describe('Blog order')-lohkoon:
+
+- Hae kaikki blogit sivulta yksiselitteisellä selektorilla:
+cy.get('.blog') tai cy.get('.blog-collapsed') (tai cy.get('[data-testid="blog"]')) sen mukaan mitä sovelluksessasi on käytössä.
+- Käy blogit läpi DOM-järjestyksessä then-kutsun sisällä ja lue jokaisen blogin tekstisisältö
+- Parsi tekstistä tykkäysten määrä säännöllisellä lauseella (esim. likes: <numero> tai likes <numero>) ja muuta arvo numeroksi
+- Varmista järjestys: tarkista, että ensimmäisen blogin tykkäysmäärä on suurempi tai yhtä suuri kuin toisen, ja toisen suurempi tai yhtä suuri kuin kolmannen
+- Älä käytä .within() tässä testissä ollenkaan, koska se aiheuttaa virheitä jos selektori palauttaa useamman blogin
+```
+
+Testaa, että:
+
+- Apufunktio createBlogWithLikes() toimii oikein
+- Kolme blogia luodaan eri määrillä likejä
+- Blogit ovat järjestyksessä laskevasti likejen perusteella
+- Eniten likejä saaneet blogit näkyvät ensin listalla
 
 Tämä oli osan viimeinen tehtävä ja on aika pushata koodi GitHubiin sekä merkata tehdyt tehtävät [palautussovellukseen](https://studies.cs.helsinki.fi/stats/courses/fullstackopen).
 

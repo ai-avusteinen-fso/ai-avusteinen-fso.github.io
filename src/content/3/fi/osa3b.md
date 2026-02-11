@@ -489,7 +489,7 @@ Tehtävässä ei tarvita juurikaan koodin kirjoittamista, joten Copilot ei suora
 
 Käytä Copilottia selittämään yksittäisiä asioita, jos et niitä ymmärrä.
 
-Jos haluat testata Renderin palvelua suoraan frontendistä, muuta taas vain personServices.js-tiedostosta _baseUrl_-muuttujaa.
+Jos haluat testata Renderin palvelua suoraan frontendistä, muuta taas vain personService.js-tiedostosta _baseUrl_-muuttujaa.
 
 ```js
 const baseUrl = 'https://full-stack-open-sfu8.onrender.com/api/persons'
@@ -518,15 +518,15 @@ Käydään vaihe kerrallaan tehtävä kuitenkin läpi:
 **1. vaihe**
 
 Muuta taas frontend-kansiossa _personService.js_-tiedostossa _baseUrl_-muuttuja suhteelliseksi poluksi:
- 
+
 ```js
 const baseUrl = '/api/persons';
-``` 
+```
 
 Tämä tehdään, koska seuraavaksi frontendin tuotantoversio sijoitetaan suoraan backendin palvelimelle (Render). Kun sekä frontend että backend ovat samassa domainissa ja samassa palvelussa, ei enää tarvita täydellistä URL-osoitetta.
 
 **2. vaihe**
- 
+
 Lisää ylläannetuissa ohjeissa oleva koodi-snipetti frontendin _vite.config.js_-tiedostoon.
 
 ```js

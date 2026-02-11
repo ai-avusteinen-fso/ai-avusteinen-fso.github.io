@@ -487,7 +487,6 @@ Lopuksi listataan persons-taulukon henkilöt näkyviin käyttäjälle:
 Listaa kaikki persons-taulukon henkilöt <h2>Numbers</h2>-otsikon alle. Käytä map-funktiota ja aseta jokaiselle elementille key-attribuutiksi henkilön nimi.
 ```
 
-
 <h4>2.7: puhelinluettelo step2</h4>
 
 Jos lisättävä nimi on jo sovelluksen tiedossa, estä lisäys. Taulukolla on lukuisia sopivia [metodeja](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) tehtävän tekemiseen.
@@ -566,7 +565,6 @@ Maalaa lopuksi persons.map-osio App-komponentin return-lohkosta ja kirjoita Copi
 Päivitä näyttämään myös puhelinnumerot.
 ```
 
-
 <h4>2.9*: puhelinluettelo step4</h4>
 
 Tee lomakkeeseen hakukenttä, jonka avulla näytettävien nimien listaa voidaan rajata:
@@ -598,7 +596,7 @@ Pyydetään ensin Copilottia lisäämään input-kenttä filtterille sekä siihe
 Lisää filter-tila useState-hookilla ja luo sille handleFilterChange-käsittelijä. Älä tee vielä muuta.
 ```
 
-Seuraavaksi luodaan uusi-input kenttä ja otetaan sille käyttöön juuri luotu filter-tila ja käsittelijä:
+Seuraavaksi luodaan uusi input-kenttä ja otetaan sille käyttöön juuri luotu filter-tila ja käsittelijä:
 
 ```text
 Lisää sovelluksen alkuun (ennen lomaketta) uusi input-kenttä "Filter:". Käytä siinä filter-tilaa value={filter} ja käsittelijää onChange-kohdassa.
@@ -684,8 +682,10 @@ Nyt tarvittavat komponentit on luotu erilliseen components-kansioon ja seuraavak
 Importoi uudet komponentit Filter, PersonForm ja Persons App.jsx-tiedostossa. Refaktoroi App-komponentti käyttämään komponentteja.
 ```
 
-App-komponentti säilyttää edelleen kaiken tilan ja logiikan. Alikomponentit ovat puhtaita presentaatioita ja saavat datan ja event-handlerit propsien kautta.
+App-komponentti säilyttää edelleen kaiken tilan ja logiikan. Alikomponentit ovat puhtaita presentaatio-komponentteja ja saavat datan ja event-handlerit propsien kautta.
 
-![](../../images/2/copilot/2_10.png)
+![Esimerkki kansio-rakenne.](../../images/2/copilot/2_10.png)
+
+Kuvasta näemme esimerkin kansio-rakenteesta.
 
 </div>

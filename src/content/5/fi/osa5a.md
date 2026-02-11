@@ -602,6 +602,48 @@ Tässä vaiheessa kirjautuneiden käyttäjien tietoja ei vielä tarvitse muistaa
   )
 ```
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Toteutetaan frontendiin kirjautuminen, jonka myötä käyttöliittymän näkymä vaihtuu käyttäjän kirjautumistilan mukaan.
+
+Lisätään sovellukseen aluksi uudet tilat, joita tulemme tarvitsemaan. Avaa _App.jsx_-tiedosto ja kirjoita Copilotille:
+
+```text
+Lisää tilat: user (null alussa), username, password.
+```
+
+Luodaan uusi service sisäänkirjautumista varten:
+
+```text
+Luo uusi tiedosto services/login.js ja sinne palvelu login-funktiolla: axios.post '/api/login' { username, password }. Palauta vastauksessa käyttäjän tiedot.
+```
+
+Luodaan seuraavaksi handleLogin-funktio _App.jsx_-tiedostoon:
+
+```text
+Luo handleLogin-funktio, joka välittää username/password backendin login-reitille.
+Jos kirjautuminen onnistuu, tallenna user tilaan.
+```
+
+Tarvitsemme sovellukseen nyt lomakkeen sisäänkirjautumista varten. Kirjoita Copilotille:
+
+```text
+Luo LoginForm-komponentti, joka saa propsina:
+username, password, handleUsernameChange, handlePasswordChange, handleLogin (onSubmit).
+Pidä user-tila ja kirjautumislogiikka App.jsx:ssä.
+```
+
+```text
+Jos user === null, näytä kirjautumislomake (username ja password -syötteet).
+Jos user on olemassa, näytä blogien lista ja logout-nappi.
+```
+
+Varmista, että:
+
+- Sivulla näkyy kirjautumislomake alussa
+- Kirjautumisen jälkeen näkyy blogien lista
+- Kirjautuneen käyttäjän nimi näkyy
+
 #### 5.2: blogilistan frontend, step2
 
 Tee kirjautumisesta "pysyvä" local storagen avulla. Tee sovellukseen myös mahdollisuus uloskirjautumiseen:
@@ -610,11 +652,71 @@ Tee kirjautumisesta "pysyvä" local storagen avulla. Tee sovellukseen myös mahd
 
 Uloskirjautumisen jälkeen selain ei saa muistaa kirjautunutta käyttäjää reloadauksen jälkeen.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Tallennetaan kirjautuneen käyttäjän tiedot local storageen niin, että sovellus muistaa käyttäjän selaimen uudelleenkäynnistyksen jälkeen.
+
+Avaa _App.jsx-tiedosto_ ja kirjoita Copilotille:
+
+```text
+Päivitä handleLogin:
+- Onnistuneen kirjautumisen jälkeen tallenna user local storageen: window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
+- Aseta myös blogService.setToken(user.token) jotta seuraavat pyynnöt sisältävät tokenin
+```
+
+Seuraavaksi lisää localStorage-tarkistus komponentin käynnistyessä.
+
+Avaa _App.jsx-tiedosto_ ja kirjoita Copilotille:
+
+```text
+Lisää useEffect-hook, joka suoritetaan kerran komponentin mountissa (dependency array: []):
+- Hae storagesta: const storedUser = window.localStorage.getItem('loggedBlogAppUser')
+- Jos storagesta löytyy käyttäjä:
+const user = JSON.parse(storedUser)
+setUser(user)
+blogService.setToken(user.token)
+```
+
+Toteutetaan uloskirjautuminen. Tee tämä muutos itse.
+
+Varmista, että:
+
+- Kirjautumisen jälkeen selaimen uudelleenkäynnistyksessä käyttäjä on edelleen kirjautunut
+- Logout-napin painamisen jälkeen käyttäjä kirjautuu ulos
+- Storage tyhjentyy logout-napin painamisen jälkeen
+
 #### 5.3: blogilistan frontend, step3
 
 Laajenna sovellusta siten, että kirjautunut käyttäjä voi luoda uusia blogeja:
 
 ![Sovellukseen lisätty lomake uusien blogien luomiseen. Lomakkeella kentät title, author ja url. Lomake näytetään ainoastaan kun käyttäjä on kirjaantunut sovellukseen.](../../images/5/7e.png)
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Sallitaan kirjautuneille käyttäjille uusien blogien luominen. Toteutetaan blogilomake ja palvelu kirjoitusoperaatioille.
+
+Avaa _services/blogs.js_ ja kirjoita Copilotille:
+
+```text
+Lisää services/blogs.js:
+- getAll(): axios.get '/api/blogs'
+- create(newBlog): axios.post '/api/blogs' newBlog-objektilla, liitä Authorization-header: { 'Authorization': `Bearer ${token}` }
+Exportoi kaikki funktiot
+```
+
+Lisää blogilomake sovellukseen nyt itse.
+
+Näytä blogilomake vain kirjautuneille. Avaa _App.jsx_-tiedosto ja kirjoita Copilotille:
+
+```text
+Lisää ehdollinen renderöinti: näytä blogilomake vain jos user !== null
+```
+
+Varmista, että:
+
+- Blogilomake näkyy vain kirjautuneille
+- Uuden blogin luominen lisää sen listalle
+- Blogin tiedot tallennetaan tietokantaan
 
 #### 5.4: blogilistan frontend, step4
 
@@ -627,6 +729,60 @@ Epäonnistunut kirjautuminen taas johtaa virhenotifikaatioon:
 ![Sovellus näyttää notifikaation "wrong username/password"](../../images/5/9e.png)
 
 Notifikaation tulee olla näkyvillä muutaman sekunnin ajan. Värien lisääminen ei ole pakollista.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Toteutetaan notifikaatiot sovellukseen. Näytetään viestejä onnistuneista ja epäonnistuneista toiminnoista.
+
+Luo Notification-komponentti:
+
+```text
+Luo Notification-komponentti:
+- Ottaa propsit: message (merkkijono tai null) ja type ('success' tai 'error')
+- Jos message on null, palauta null (ei renderöidä mitään)
+- Muuten renderöi <div>, jonka className on type (success tai error)
+- Sisällä näytetään message
+```
+
+Lisää notifikaation hallinta App-komponenttiin:
+
+Avaa App.jsx-tiedosto ja kirjoita Copilotille:
+
+```text
+Lisää tila notifikaatioille: const [notification, setNotification] = useState({ message: null, type: null })
+Luo apufunktio showNotification(message, type):
+- Asettaa notifikaation: setNotification({ message, type })
+- Ajastaa tyhjennyksen 5 sekunnin kuluttua: setTimeout(() => setNotification({ message: null, type: null }), 5000)
+```
+
+Otetaan Notification-komponentti käyttöön. Avaa App.jsx-tiedosto ja kirjoita Copilotille:
+
+```text
+Päivitä handleLogin:
+- Onnistunut kirjautuminen: showNotification('kirjautuminen onnistui', 'success')
+- Epäonnistunut kirjautuminen: showNotification('virheellinen käyttäjätunnus tai salasana', 'error')
+```
+
+```text
+Päivitä blogin lisäysfunktio handleAddBlog:
+- Onnistunut blogin lisäys: showNotification(`blogi "${title}" lisätty`, 'success')
+- Epäonnistunut: showNotification('blogin lisäys epäonnistui', 'error')
+```
+
+Renderöidään komponentti _App.jsx_-tiedostossa:
+
+```text
+Renderöi Notification-komponentti App.jsx-tiedoston ylälaidassa
+```
+
+Lisää tyylit notifikaatiolle. Tee tämä muutos itse.
+
+Varmista, että:
+
+- Onnistunut kirjautuminen näyttää vihreän notifikaation
+- Epäonnistunut kirjautuminen näyttää punaisen notifikaation
+- Blogin lisääminen näyttää onnistumisviestin
+- Notifikaatio katoaa 5 sekunnin kuluttua
 
 </div>
 

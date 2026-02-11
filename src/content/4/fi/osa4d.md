@@ -349,6 +349,52 @@ Käyttäjien lista voi näyttää esim. seuraavalta:
 
 ![](../../images/4/22.png)
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Luodaan käyttäjien hallinnon perusteet: käyttäjä-malli, käyttäjien luomisen reitti ja testit.
+
+Avaa _models/user.js_ ja kirjoita Copilotille:
+
+```text
+Luo Mongoose-skeema kentille username (uniikki), name ja passwordHash. Lisää toJSON-metodi, joka muuntaa _id → id ja poistaa __v sekä passwordHash.
+```
+
+Sitten toteuta käyttäjien API.
+
+Avaa _controllers/users.js_ ja kirjoita Copilotille:
+
+```text
+Toteuta POST /api/users, joka:
+- ottaa vastaan username, name ja password
+- hashaa salasanan (bcrypt/bcryptjs, saltRounds=10)
+- tallettaa käyttäjän kantaan
+- palauttaa 201 ja JSON ilman passwordHash-kenttää
+```
+
+```text
+Lisää myös GET /api/users, joka palauttaa kaikki käyttäjät JSON:ina.
+```
+
+Rekisteröi reitit app.js-tiedostoon:
+
+```js
+app.use('/api/users', usersRouter)
+```
+
+Seuraavaksi luodaan testit uusille reiteille.
+
+Avaa *tests/user_api.test.js* ja kirjoita Copilotille:
+
+```text
+Luo testi node:test + supertest + assert:
+- beforeEach: tyhjennä User-kokoelma
+- testi POST /api/users: varmista että se luo käyttäjän (expect 201, Content-Type application/json), määrä kasvaa yhdellä, eikä palautettu olio sisällä passwordHashia
+- testi GET /api/users: varmista että se palauttaa JSON-listan käyttäjistä
+- after: sulje mongoose-yhteys
+```
+
+Lopuksi, varmista testin toimivuus.
+
 #### 4.16*: blogilistan laajennus, step4
 
 Laajenna käyttäjätunnusten luomista siten, että käyttäjätunnuksen sekä salasanan tulee olla olemassa ja vähintään 3 merkkiä pitkiä. Käyttäjätunnuksen on oltava järjestelmässä uniikki.
@@ -360,6 +406,44 @@ Luomisoperaation tulee palauttaa sopiva statuskoodi ja jonkinlainen virheilmoitu
 **Tee myös testit**, jotka varmistavat, että virheellisiä käyttäjiä ei luoda, ja että virheellisen käyttäjän luomisoperaatioon vastaus on järkevä statuskoodin ja virheilmoituksen osalta.
 
 **HUOM** jos päätät tehdä testejä useaan eri tiedostoon, on syytä huomioida se, että oletusarvoisesti jokainen testitiedosto suoritetaan omassa prosessissaan (ks. kohta _Test execution model_ [dokumentaatiosta](https://nodejs.org/api/test.html)). Seurauksena tästä on se, että eri testitiedostoja suoritetaan yhtä aikaa. Koska testit käyttävät samaa tietokantaa, saattaa yhtäaikaisesta suorituksesta aiheutua ongelmia. Ongelmat vältetään kun testit suoritetaan optiolla _--test-concurrency=1_, eli määritellään ne suoritettavaksi peräkkäin.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Lisätään validointi käyttäjätunnukselle ja salasanalle: molemmat ovat pakollisia ja vähintään 3 merkkiä pitkiä. Käyttäjätunnuksen on oltava uniikki.
+
+Avaa _controllers/users.js_ ja kirjoita Copilotille:
+
+```text
+Päivitä POST /api/users -käsittelijä:
+- Tarkista, että username ja password ovat olemassa ja vähintään 3 merkkiä pitkiä
+- Palauta 400 ja selkeä virheilmoitus, jos tarkistus epäonnistuu
+- Tee tarkistus ennen bcrypt-hashausta
+```
+
+Seuraavaksi varmistetaan, että käyttäjätunnus on uniikki.
+
+Avaa _models/user.js_ ja kirjoita Copilotille:
+
+```text
+Lisää skeemaan unique: true -validaattori username-kentälle.
+Älä lisää mongoose-validaatiota salasanakentälle.
+```
+
+Lisää virheenkäsittely MongoDB:n E11000-virheelle (duplicate key error).
+
+Avaa _controllers/users.js_ ja kirjoita Copilotille:
+
+```text
+Lisää catch-lohkoon käsittely E11000-virheelle: tarkista err.code === 11000, palauta 400 ja selkeä viesti, että käyttäjätunnus on jo käytössä.
+```
+
+Nyt täytyisi päivittää testit vastaamaan uusia validointeja. Tee tämä nyt itse.
+
+Aja uudet testit peräkkäin:
+
+```bash
+npm test -- --test-concurrency=1 tests/user_api.test.js
+```
 
 #### 4.17: blogilistan laajennus, step5
 
@@ -375,13 +459,116 @@ ja käyttäjien listausta siten että käyttäjien lisäämät blogit ovat näky
 
 ![](../../images/4/24e.png)
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Linkitetään blogit käyttäjiin ja muodostetaan suhteet user- ja blogs-kenttien välille.
+
+Avaa _models/blog.js_ ja kirjoita Copilotille:
+
+```text
+Lisää blogimalliin user-kenttä: user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+```
+
+Seuraavaksi muokataan blogien lisäystä:
+
+Avaa _controllers/blogs.js_ ja kirjoita Copilotille:
+
+```text
+Päivitä blogien lisäys: hae olemassa oleva käyttäjä (await User.findOne()), aseta blog.user = user._id, talleta ja palauta blogi.
+```
+
+Tämän jälkeen päivitetään blogien listausta populate-funktiolla:
+
+```text
+Päivitä GET /api/blogs: käytä Blog.find({}).populate('user', { username: 1, name: 1 })
+```
+
+Nyt päivitä käyttäjien listausta populate-funktiolla. Lisää tämä muutos itse.
+
+Lopuksi aja kaikki testit peräkkäin:
+
+```bash
+npm test -- --test-concurrency=1
+```
+
+Varmista, että blogit näyttävät käyttäjän tiedot ja käyttäjien listaus näyttää heidän blogit.
+
 #### 4.18: blogilistan laajennus, step6
 
 Toteuta osan 4 luvun [Token-perustainen kirjautuminen](/osa4/token_perustainen_kirjautuminen) tapaan järjestelmään token-perustainen autentikointi.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Toteutetaan token-perustainen kirjautuminen: käyttäjä voi kirjautua salasanallaan ja saada JWT-tokenin.
+
+Luo _controllers/login.js_ ja kirjoita Copilotille:
+
+```text
+Toteuta POST /api/login:
+- Etsi käyttäjä User.findOne({ username })
+- Vertaa salasana bcrypt.compare(password, user.passwordHash)
+- Jos käyttäjä tai salasana virheellinen: palauta 401 ja virheilmoitus
+```
+
+Seuraavaksi, kun kirjautuminen on onnistunut, haluamme luoda JWT-tokenin:
+
+```text
+Onnistuneeseen kirjautumiseen:
+- Generoi JWT-token: jwt.sign(userForToken, process.env.SECRET)
+- Palauta 200 ja { token, username: user.username, name: user.name }
+```
+
+Rekisteröi reitti app.js-tiedostoon.
+
+Tee seuraavaksi testit:
+
+Avaa *tests/login_api.test.js* ja kirjoita Copilotille:
+
+```text
+Luo testit POST /api/login:
+- Onnistunut kirjautuminen (oikea username ja password): palauttaa 200 ja sisältää token, username ja name
+- Väärä salasana: palauttaa 401 ja JSON-virheilmoitus
+- Tuntematon käyttäjä: palauttaa 401 ja JSON-virheilmoitus
+Käytä supertest-kirjastoa ja beforeEach/after-hookeja käyttäjän luomiseen ja siivoukseen.
+```
+
+Lopuksi, aja kaikki testit peräkkäin.
+
 #### 4.19: blogilistan laajennus, step7
 
 Muuta blogien lisäämistä siten, että se on mahdollista vain, jos lisäyksen tekevässä HTTP POST ‑pyynnössä on mukana validi token. Tokenin haltija määritellään blogin lisääjäksi.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Muutetaan blogien lisäys niin, että se vaatii kelvollisen JWT-tokenin ja linkittää blogin tokenin omistajaan.
+
+**Huom:** Tokenia ei tallenneta blogiin.
+
+Avaa _controllers/blogs.js_ ja kirjoita Copilotille:
+
+```text
+Päivitä POST /api/blogs:
+- Lue Authorization-header ja ekstraktoi Bearer-token
+- Dekoodaa token: jwt.verify(token, process.env.SECRET)
+- Hae käyttäjä kannasta decoded-tokenia käyttäen
+- Älä tallenna tokenia blogiin: tokenia käytetään vain tunnistamiseen
+- Aseta blog.user = user._id
+- Talleta ja palauta blogi (201)
+- Jos token puuttuu tai on virheellinen: palauta 401 Unauthorized
+```
+
+Päivitä nyt testit niin, että ne käyttävät tokenia. Avaa *tests/blog_api.test.js* ja kirjoita Copilotille:
+
+```text
+Tee apufunktio loginAndGetToken(), joka:
+- Luo käyttäjän
+- Kirjautuu login-reitille
+- Palauttaa tokenin
+
+Päivitä blogin lisäys-testit:
+- Kutsu loginAndGetToken() saadaksesi tokenin
+- Aseta Authorization-header: set('Authorization', 'Bearer ' + token)
+```
 
 #### 4.20*: blogilistan laajennus, step8
 
@@ -414,6 +601,32 @@ const tokenExtractor = (request, response, next) => {
   next()
 }
 ```
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Refaktoroidaan tokenin lukeminen omaksi middleware-funktioksi.
+
+Avaa _utils/middlewares.js_ ja kirjoita Copilotille:
+
+```text
+Luo tokenExtractor-middleware:
+- Funktio ottaa kolme parametria: request, response, next
+- Lukee Authorization-headerin: request.get('authorization')
+- Ekstraktoi Bearer-tokenia: const token = auth.substring(7)
+- Asettaa request.token = token
+- Kutsuu next()
+```
+
+Rekisteröidään uusi middleware app.js-tiedostoon.
+
+Avaa _app.js_ ja kirjoita Copilotille:
+
+```text
+Rekisteröi tokenExtractor-middleware: app.use(middleware.tokenExtractor)
+Varmista, että se on ennen reittiä app.use('/api/blogs', blogsRouter)
+```
+
+Päivitä blogsRouter käyttämään request.token. Tee tämä muutos itse ja lopuksi aja kaikki testit.
 
 #### 4.21*: blogilistan laajennus, step9
 
@@ -462,6 +675,23 @@ backend -> selain: 201 created
 kayttaja -> kayttaja:
 -->
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Muutetaan blogin poisto-operaatiota niin että vain blogin omistaja voi poistaa sen.
+
+Avaa _controllers/blogs.js_ ja kirjoita Copilotille:
+
+```text
+Päivitä DELETE /api/blogs/:id:
+- Dekoodaa token: const decodedToken = jwt.verify(request.token, process.env.SECRET)
+- Hae blogi kannasta: const blog = await Blog.findById(request.params.id)
+- Vertaa omistaja: if (blog.user.toString() === decodedToken.id.toString())
+- Jos omistaja täsmää: poista blogi ja palauta 204 No Content
+- Jos omistaja ei täsmää: palauta 403 Forbidden
+- Jos token puuttuu: palauta 401 Unauthorized
+```
+
+Nyt tee testit, jotka tarkistavat DELETE /api/blogs/:id-pyynnön tokenit. Tee tämä itse.
 
 #### 4.22*:  blogilistan laajennus, step10
 
@@ -514,11 +744,100 @@ router.post('/', userExtractor, async (request, response) => { // highlight-line
 
 Huolehdi, että kaikkien blogien hakeminen GET-pyynnöllä onnistuu edelleen ilman tokenia.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Refaktoroidaan käyttäjän haku omaksi middleware-funktioksi. Näin POST- ja DELETE-käsittelijät pääsevät käyttäjään helposti.
+
+Avaa _utils/middlewares.js_ ja kirjoita Copilotille:
+
+```text
+Luo userExtractor-middleware:
+- Funktio ottaa kolme parametria: request, response, next
+- Jos request.method === 'GET' kutsu next()
+- Dekoodaa token: const decodedToken = jwt.verify(request.token, process.env.SECRET)
+- Hae käyttäjä kannasta: const user = await User.findById(decodedToken.id)
+- Aseta request.user = user
+- Kutsuu next()
+- Jos token puuttuu tai on virheellinen: palauta 401
+```
+
+Rekisteröi middleware:
+
+Avaa _app.js_ ja kirjoita Copilotille:
+
+```text
+Rekisteröi userExtractor-middleware vain /api/blogs-reitille:
+app.use('/api/blogs', middleware.userExtractor, blogsRouter)
+
+Huomio: GET /api/blogs ei vaadi tokenia, joten userExtractor ei saa estää sitä. Käytännössä
+helpoin ratkaisu on käyttää userExtractor vain POST- ja DELETE-routeihin, jotta GET/PUT toimivat ilman tokenia.
+```
+
+Seuraavaksi päivitetään reitit:
+
+Avaa _controllers/blogs.js_ ja kirjoita Copilotille:
+
+```text
+Päivitä POST /api/blogs ja DELETE /api/blogs/:id:
+- Käytä request.user (middleware on jo hakenut sen)
+- Poista manuaalinen käyttäjän haku ja jwt.verify
+- Muuta blog.user = user._id
+- Poista virheenkäsittely tokenin puuttumiselle (middleware hoitaa sen)
+```
+
+Varmista, että GET /api/blogs ja GET /api/blogs/:id toimivat ilman tokenia.
+
+Lopuksi, aja kaikki testit.
+
 #### 4.23*: blogilistan laajennus, step11
 
 Token-kirjautumisen lisääminen valitettavasti hajotti blogien lisäämiseen liittyvät testit. Korjaa testit. Tee myös testi, joka varmistaa että uuden blogin lisäys ei onnistu, ja pyyntö palauttaa oikean statuskoodin <i>401 Unauthorized</i> jos pyynnön mukana ei ole tokenia.
 
 Tarvitset luultavasti [tätä](https://github.com/visionmedia/supertest/issues/398) tietoa tehtävää tehdessä.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Korjataan testit, jotka hajosivat token-kirjautumisen lisäämisen jälkeen.
+
+Avaa *tests/blog_api.test.js* ja kirjoita Copilotille:
+
+```text
+Tutustu kaikkiin testeihin, jotka liittyvät blogien luomiseen ja poistamiseen.
+Identifioi testit, jotka hajosivat token-vaatimuksen seurauksena.
+Päivitä ne:
+- Käytä loginAndGetToken-apuria ennen blogin luomista
+- Aseta Authorization-header: set('Authorization', 'Bearer ' + token)
+- Varmista, että testit toimivat populoitua user-struktuuria vasten
+```
+
+Luodaan vielä testi, joka varmistaa, että blogia ei luoda ilman voimassa olevaa tokenia.
+
+Avaa _tests/blog_api.test.js_ ja kirjoita Copilotille:
+
+```text
+Kirjoita testi: uuden blogin lisäys ilman Authorization-headeria
+- POST /api/blogs ilman tokenia
+- Odota 401 Unauthorized
+- Varmista että blogia ei lisätty kantaan (blogien määrä ei kasva)
+```
+
+Varmista, että testit siivoavat tietokannan ennen jokaista testiä ja sulkevat MongoDB-yhteyden testien jälkeen.
+
+Avaa *tests/blog_api.test.js* ja kirjoita Copilotille:
+
+```text
+Tarkista, että jokaisessa testitiedostossa:
+- beforeEach: tyhjentää tietokannan, luo testitietoja
+- after: sulkee mongoose-yhteyden
+```
+
+Aja kaikki testit:
+
+```bash
+npm test -- --test-concurrency=1
+```
+
+Korjaa mahdolliset loput virheet, kunnes kaikki testit menevät läpi.
 
 Tämä oli osan viimeinen tehtävä ja on aika pushata koodi GitHubiin sekä merkata tehdyt tehtävät [palautussovellukseen](https://studies.cs.helsinki.fi/stats/courses/fullstackopen).
 

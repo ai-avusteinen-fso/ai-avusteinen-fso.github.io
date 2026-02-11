@@ -444,6 +444,29 @@ Tee sovelluksesta toimiva <i>npm</i>-projekti. Jotta sovelluskehitys olisi sujuv
 
 Varmista, että sovellukseen on mahdollista lisätä blogeja Postmanilla tai VS Code REST Clientilla ja että sovellus näyttää lisätyt blogit.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Tehtävissä esiintyville toimenpiteille, joita ei tehdä enää ensimmäistä kertaa ei tule enää suoria ohjeita, vaan joudut muistelemaan aikaisempia tehtäviä.
+
+Tämä tehtävä on käytännössä jo tehty kokonaan aikaisemmin, alla vaiheittain abstraktit ohjeet:
+
+* Luo uusi projekti
+
+* Asenna tarvittavat paketit (Express, Mongoose)
+
+* Luo index.js ja kopioi tehtävässä annettu koodi tiedostoon.
+
+* Muokkaa _mongoUrl_ -muuttujaa osoittamaan omaan MongoDB-tietokantaasi.
+
+* Lisää package.json -tiedostoon _node_ _--watch_ käyttöön
+
+**Testaa toiminta:**
+
+Lisää blogi Postmanilla tai VS Coden REST Clientillä. Varmista, että lisätyt blogit näkyvät sovelluksessasi. Jos jokin ei toimi, voit aina kysyä Copilotilta apua.
+
+Tämän jälkeen commit ja etene seuraavaan tehtävään.
+
+
 #### 4.2 blogilista, step2
 
 Jaa sovelluksen koodi tämän osan alun tapaan useaan moduuliin.
@@ -451,6 +474,40 @@ Jaa sovelluksen koodi tämän osan alun tapaan useaan moduuliin.
 **HUOM:** Etene todella pienin askelin ja varmistaen, että kaikki toimii koko ajan. Jos yrität "oikaista" tekemällä monta asiaa kerralla, on [Murphyn lain](https://fi.wikipedia.org/wiki/Murphyn_laki) perusteella käytännössä varmaa, että jokin menee pahasti pieleen ja "oikotien" takia maaliin päästään paljon myöhemmin kuin systemaattisin pienin askelin.
 
 Paras käytänne on commitoida koodi aina stabiilissa tilanteessa. Tällöin on helppo palata aina toimivaan tilanteeseen jos koodi menee liian solmuun.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Seuraavaksi jaetaan sovellus tehtävän alun esimerkin tapaan omiin moduuleihin. Otetaan myös `.env` tässä vaiheessa käyttöön.
+
+Asenna dotenv-paketti terminaalissa ``npm install dotenv``
+
+Tämän jälkeen kirjoita Copilotille:
+
+```text
+Jaetaan sovellus omiin moduuleihin.
+Luo kansiot:
+controllers - reiteille
+models - malleille
+
+juureen tiedostot:
+app.js - määrittelee Express-sovelluksen ja exporttaa appin (module.exports = app),
+Ei app.listen:iä
+index.js - käynnistää serverin (app.listen) ja lukee .env
+(require('dotenv').config())
+
+Lisäksi:
+controllers/blogs.js - käyttää express.Router():ia ja tuo Blog-mallin models/blog.js:stä
+models/blog.js - sisältää vain mongoose-skeeman ja model-exportin
+.env - refaktoroi sovellus käyttämään PORT ja MONGODB_URI muuttujia
+```
+
+**Varmista, että .env-tiedosto on git-ignoroitu**
+
+Toimenpiteen jälkeen sovelluksen rakenteen pitäisi olla suunnilleen seuraava:
+
+![Sovelluksen arkkitehtuuri refaktoroinnin jälkeen](../../images/4/copilot/task_4_2.png)
+
+Varmista, että sovellus toimii edelleen kuten aiemmin ja tee commit.
 
 </div>
 
@@ -675,6 +732,22 @@ test('dummy returns one', () => {
 })
 ```
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Tehtävän tavoite on siis vain luoda toimiva testiympäristö.
+
+* Lisää package.json -tiedostoon ``"test": "node --test"``
+
+* Luo kansiot _utils_ ja _tests_.
+
+* Luo utils-kansioon _list_helper.js_-tiedosto ja kopioi yllä annettu _dummy_-funktio tiedostoon. Funktio palauttaa tässä vaiheessa aina numeron 1, voit siis kirjoittaa funktion bodyyn : return 1
+
+* Luo tests-kansioon testi haluamallasi nimellä, esim. _list_helper.test.js_
+
+Huomioi, että kurssilla konventio on käyttää _.test.js_ -päätettä testeissä.
+
+Aja testi komennolla ``npm run test``, testin pitäisi mennä läpi.
+
 #### 4.4: apufunktioita ja yksikkötestejä, step2
 
 Määrittele funktio _totalLikes_, joka saa parametrikseen taulukollisen blogeja. Funktio palauttaa blogien yhteenlaskettujen tykkäysten eli <i>likejen</i> määrän.
@@ -709,6 +782,60 @@ Jos et viitsi itse määritellä testisyötteenä käytettäviä blogeja, saat v
 
 Törmäät testien tekemisen yhteydessä varmasti erinäisiin ongelmiin. Pidä mielessä osassa 3 käsitellyt [debuggaukseen](/osa3/tietojen_tallettaminen_mongo_db_tietokantaan#node-sovellusten-debuggaaminen) liittyvät asiat. 
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Tehdään ensin apufunktio tykkäysten yhteenlaskemista varten.
+
+Avaa *list_helper.js*-tiedosto ja kirjoita Copilotille:
+
+```text
+Tee funktio totalLikes, joka saa parametrina taulukon blogeja ja palauttaa blogien yhteenlaskettujen tykkäysten määrän.
+Blogin esimerkkirakenne:
+  {
+    _id: "5a422a851b54a676234d17f7",
+    title: "React patterns",
+    author: "Michael Chan",
+    url: "https://reactpatterns.com/",
+    likes: 7,
+    __v: 0
+  }
+```
+
+Luodaan seuraavaksi testidata muuttujiin tiedoston yläreunaan, jotta sitä voidaan uudelleenkäyttää useissa testeissä.
+
+**Huom:** Käytämme Node.js:n sisäänrakennettua test runneria. 
+Tuo testissä test ja describe moduulista node:test ja käytä node:assert.
+Älä käytä Jestin expect(...) syntaksia.
+
+Avaa *list_helper.test.js* -tiedosto ja kirjoita Copilotille:
+
+```text
+Määrittele 3 kappaletta satunnaisia olioita seuraavassa muodossa:
+{
+  _id: "5a422a851b54a676234d17f7",
+  title: "React patterns",
+  author: "Michael Chan",
+  url: "https://reactpatterns.com/",
+  likes: 7,
+  __v: 0
+}
+
+Sijoita ne muuttujaan "listWithThreeBlogs" ja lisäksi yksi niistä muuttujaan "listWithOneBlog".
+```
+
+Seuraavaksi kirjoitetaan yksikkötestit totalLikes-funktiolle.
+
+```text
+  Testaa juuri luotu totalLikes-funktio seuraavilla test caseilla (describe):
+  - Tyhjä lista = 0
+  - Yhdellä blogilla
+  - kolmella blogilla
+
+  Käytä muuttujia listWithOneBlog ja listWithThreeBlogs testeissä.
+```
+
+Aja testit, nyt yhteensä 4 testiä pitäisi mennä läpi.
+
 #### 4.5*: apufunktioita ja yksikkötestejä, step3
 
 Määrittele funktio _favoriteBlog_, joka saa parametrikseen taulukollisen blogeja. Funktio palauttaa blogin, jolla on eniten tykkäyksiä. Jos suosikkeja on monta, riittää että funktio palauttaa niistä jonkun.
@@ -716,6 +843,34 @@ Määrittele funktio _favoriteBlog_, joka saa parametrikseen taulukollisen bloge
 **HUOM.** Kun vertailet olioita, haluat luultavimmin käyttää [deepStrictEqual](https://nodejs.org/api/assert.html#assertdeepstrictequalactual-expected-message)-metodia, sillä se tarkistaa, että olioilla on samat attribuutit. Assert-moduulin eri metodeista voit lukea lisää esimerkiksi [tästä Stack Overflow -vastauksesta](https://stackoverflow.com/a/73937068/15291501).
 
 Tee myös tämän ja seuraavien kohtien testit kukin oman <i>describe</i>-lohkonsa sisälle.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Aloitetaan taas tekemällä ensin apufunktio. Avaa *list_helper.js*-tiedosto ja kirjoita Copilotille:
+
+```text
+Tee funktio favoriteBlog, joka saa parametrina taulukon blogeja ja palauttaa blogin, jolla on eniten tykkäyksiä. Jos suosikkeja on monta, ei ole väliä minkä niistä palauttaa.
+Blogin esimerkkirakenne:
+  {
+    _id: "5a422a851b54a676234d17f7",
+    title: "React patterns",
+    author: "Michael Chan",
+    url: "https://reactpatterns.com/",
+    likes: 7,
+    __v: 0
+  }
+```
+
+Seuraavaksi yksikkötestit, avaa testitiedosto ja kirjoita Copilotille:
+
+```text
+Luo yksikkötestit äsken luodulle favoriteBlog-funktiolle.
+Käytä deepStrictEqual -metodia.
+Käytä samoja aiemmin luotuja blogitaulukkoja.
+Samat test caset 0, 1 ja 3 blogia.
+```
+
+Aja testit. Nyt testejä pitäisi olla yhteensä seitsemän, ja niiden kaikkien tulisi mennä läpi.
 
 #### 4.6*: apufunktioita ja yksikkötestejä, step4
 
@@ -734,6 +889,48 @@ Määrittele funktio _mostBlogs_, joka saa parametrikseen taulukollisen blogeja.
 
 Jos ennätysbloggaajia on monta, riittää että funktio palauttaa niistä jonkun.
 
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Otetaan _lodash_-kirjasto käyttöön tässä tehtävässä.
+
+Asenna paketti ``npm install lodash``
+
+Aloitetaan määrittelemällä ensin apufunktio _mostBlogs_.
+
+Avaa *list_helper.js* ja kirjoita Copilotille:
+
+```text
+Tee funktio mostBlogs, joka saa parametrina taulukon blogeja. Funktio selvittää kirjoittajan, jolla on eniten blogeja. Palautetaan olio {author, blogs}.
+Käytetään lodash-kirjaston _.groupBy ja _.maxBy.
+Blogin esimerkkirakenne:
+{
+    _id: "5a422a851b54a676234d17f7",
+    title: "React patterns",
+    author: "Michael Chan",
+    url: "https://reactpatterns.com/",
+    likes: 7,
+    __v: 0
+  }
+```
+
+Käytämme siis _lodash_-kirjaston tarjoamia funktioita:
+
+*_.groupBy* --> Järjestämme tällä _blogs_ -taulukon _author_ -sarakkeen perusteella omiin ryhmiin.
+
+*_.maxBy* --> Iteroimme ryhmien läpi ja palautamme ryhmän, jossa on eniten blogeja.
+
+Seuraavaksi kirjoitetaan yksikkötestit uudelle funktiolle.
+
+Avaa testitiedosto ja kirjoita Copilotille:
+
+```text
+Luo yksikkötestit äsken luodulle mostBlogs-funktiolle.
+Käytä samoja aiemmin luotuja blogitaulukoita.
+Samat test caset 0, 1 ja 3 blogia.
+```
+
+Aja testit. Nyt läpäiseviä testejä pitäisi olla 10 kappaletta.
+
 #### 4.7*: apufunktioita ja yksikkötestejä, step5
 
 Määrittele funktio _mostLikes_, joka saa parametrikseen taulukollisen blogeja. Funktio selvittää kirjoittajan, jonka blogeilla on eniten tykkäyksiä. Funktion paluuarvo kertoo myös suosikkibloggaajan likejen yhteenlasketun määrän:
@@ -746,5 +943,35 @@ Määrittele funktio _mostLikes_, joka saa parametrikseen taulukollisen blogeja.
 ```
 
 Jos suosikkibloggaajia on monta, riittää että funktio palauttaa niistä jonkun.
+
+<h4>Copilot-ohjeet tehtävälle</h4>
+
+Tehtävä on hyvin samankaltainen kuin edeltäjä, käytämme nyt vain myös lodashin *_.sumBy*-funktiota summaamaan kaikki tykkäykset.
+
+Aloitetaan _mostLikes_-funktiolla. Avaa *list_helper.js* ja kirjoita Copilotille:
+
+```text
+Tee funktio mostLikes, joka saa parametrina taulukon blogeja. Funktio selvittää kirjoittajan, jolla on eniten tykkäyksiä yhteensä omissa blogeissa. Palautetaan olio {author, likes}.
+Käytetään lodash-kirjaston _.groupBy _.maxBy ja _.sumBy -funktioita.
+Blogin esimerkkirakenne:
+{
+    _id: "5a422a851b54a676234d17f7",
+    title: "React patterns",
+    author: "Michael Chan",
+    url: "https://reactpatterns.com/",
+    likes: 7,
+    __v: 0
+  }
+```
+
+Seuraavaksi yksikkötestit. Avaa testitiedosto ja kirjoita Copilotille:
+
+```text
+Luo yksikkötestit äsken luodulle mostLikes-funktiolle.
+Käytä samoja aiemmin luotuja blogitaulukoita.
+Samat test caset 0, 1 ja 3 blogia.
+```
+
+Aja testit. Lopuksi läpäiseviä testejä pitäisi olla 13 kappaletta.
 
 </div>
